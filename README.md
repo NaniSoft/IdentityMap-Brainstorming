@@ -1,2 +1,2 @@
-# IdMapBrainstorming
-Brainstorming IdMap application
+# IdentityMap Brainstorming
+Brainstorming IdentityMap application
