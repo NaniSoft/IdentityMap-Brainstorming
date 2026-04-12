@@ -187,6 +187,50 @@ namespace ITGovernance.Domain
         Group
     }
 
+    /// <summary>
+    /// The primitive data type of a <see cref="ResourceAttributeDefinition"/>.
+    /// Drives UI rendering (text box, number spinner, date picker, dropdown)
+    /// and determines which typed column of <see cref="ResourceAttributeValue"/>
+    /// holds the live value.
+    /// </summary>
+    public enum AttributeDataType
+    {
+        /// <summary>Free-form text. Stored in <c>ValueString</c>.</summary>
+        String,
+
+        /// <summary>32-bit signed integer. Stored in <c>ValueInt</c>.</summary>
+        Integer,
+
+        /// <summary>64-bit floating-point. Stored in <c>ValueDouble</c>.</summary>
+        Double,
+
+        /// <summary>Boolean flag. Stored in <c>ValueBool</c>. Rendered as toggle.</summary>
+        Boolean,
+
+        /// <summary>UTC date/time. Stored in <c>ValueDateTime</c>. Rendered as date-picker.</summary>
+        DateTime,
+
+        /// <summary>
+        /// Constrained set of values defined by <see cref="ResourceAttributeEnumOption"/>
+        /// records. Rendered as a dropdown. Stored in <c>ValueString</c>
+        /// (the chosen option's <c>Value</c> key).
+        /// </summary>
+        Enum,
+
+        /// <summary>
+        /// A reference to another Resource by its Id.
+        /// Stored in <c>ValueString</c> (Guid as string).
+        /// Rendered as a searchable resource picker.
+        /// </summary>
+        ResourceReference,
+
+        /// <summary>Multi-line text / rich text. Stored in <c>ValueString</c>.</summary>
+        Text,
+
+        /// <summary>URL / URI. Stored in <c>ValueString</c>, validated as a URI.</summary>
+        Url
+    }
+
 
     // =========================================================================
     // BASE ENTITY
@@ -205,6 +249,365 @@ namespace ITGovernance.Domain
 
         /// <summary>Resource that created / last modified this record.</summary>
         public Guid? CreatedByResourceId { get; set; }
+    }
+
+
+    // =========================================================================
+    // RESOURCE TYPE SCHEMA  (business-user-defined attribute blueprint)
+    // =========================================================================
+
+    /// <summary>
+    /// The attribute schema for one <see cref="ResourceType"/>.
+    /// A business user creates or edits this schema through the UI; the
+    /// resulting attribute definitions then act as a template for creating and
+    /// ingesting concrete <see cref="Resource"/> instances of that type.
+    /// <br/>
+    /// One <see cref="ResourceTypeSchema"/> exists per <see cref="ResourceType"/>
+    /// (enforced by a unique index on <see cref="ForResourceType"/>).
+    /// </summary>
+    public class ResourceTypeSchema : BaseEntity
+    {
+        /// <summary>The resource type this schema describes.</summary>
+        [Required]
+        public ResourceType ForResourceType { get; set; }
+
+        [Required, MaxLength(256)]
+        public string DisplayName { get; set; } = string.Empty;
+
+        [MaxLength(1024)]
+        public string? Description { get; set; }
+
+        /// <summary>Schema version — increment when attributes are added/removed.</summary>
+        public int Version { get; set; } = 1;
+
+        /// <summary>Whether new resources of this type can still be created.</summary>
+        public bool IsActive { get; set; } = true;
+
+        // ── Navigation ────────────────────────────────────────────────────────
+
+        /// <summary>Ordered list of attribute definitions that form this schema.</summary>
+        public ICollection<ResourceAttributeDefinition> AttributeDefinitions { get; set; }
+            = new List<ResourceAttributeDefinition>();
+    }
+
+
+    // =========================================================================
+    // RESOURCE ATTRIBUTE DEFINITION  (one field in the schema)
+    // =========================================================================
+
+    /// <summary>
+    /// Defines a single typed attribute (field) within a
+    /// <see cref="ResourceTypeSchema"/>. Business users configure these in the UI;
+    /// they control label, data type, validation constraints, display order,
+    /// and — for Enum attributes — the allowed dropdown options.
+    /// </summary>
+    public class ResourceAttributeDefinition : BaseEntity
+    {
+        [Required]
+        public Guid ResourceTypeSchemaId { get; set; }
+
+        // ── Identity & display ────────────────────────────────────────────────
+
+        /// <summary>
+        /// Stable machine key used in code and ingestion pipelines.
+        /// Snake_case recommended (e.g. "ip_address", "cpu_cores").
+        /// </summary>
+        [Required, MaxLength(128)]
+        public string Key { get; set; } = string.Empty;
+
+        /// <summary>Human-readable label shown in the UI form.</summary>
+        [Required, MaxLength(256)]
+        public string Label { get; set; } = string.Empty;
+
+        [MaxLength(1024)]
+        public string? HelpText { get; set; }
+
+        /// <summary>
+        /// Optional grouping header shown in the UI (e.g. "Network", "Hardware").
+        /// Attributes sharing the same group are rendered together.
+        /// </summary>
+        [MaxLength(128)]
+        public string? GroupName { get; set; }
+
+        /// <summary>Render order within <see cref="GroupName"/> (or globally if no group).</summary>
+        public int DisplayOrder { get; set; } = 0;
+
+        // ── Type & validation ─────────────────────────────────────────────────
+
+        [Required]
+        public AttributeDataType DataType { get; set; }
+
+        /// <summary>Must a value be provided when creating a resource?</summary>
+        public bool IsRequired { get; set; } = false;
+
+        /// <summary>Can the same resource carry multiple values for this attribute?</summary>
+        public bool IsMultiValue { get; set; } = false;
+
+        /// <summary>
+        /// Default value serialised as string (parsed according to <see cref="DataType"/>
+        /// at read time).  Null = no default.
+        /// </summary>
+        [MaxLength(512)]
+        public string? DefaultValue { get; set; }
+
+        // ── String / Text constraints ─────────────────────────────────────────
+
+        /// <summary>Minimum string length (applies to String and Text types).</summary>
+        public int? MinLength { get; set; }
+
+        /// <summary>Maximum string length (applies to String, Text, Url types).</summary>
+        public int? MaxLength { get; set; }
+
+        /// <summary>
+        /// Optional regex pattern for String / Url types
+        /// (e.g. IPv4 pattern for an "ip_address" attribute).
+        /// </summary>
+        [MaxLength(512)]
+        public string? RegexPattern { get; set; }
+
+        // ── Numeric constraints ───────────────────────────────────────────────
+
+        /// <summary>Inclusive minimum (applies to Integer and Double types).</summary>
+        public double? MinValue { get; set; }
+
+        /// <summary>Inclusive maximum (applies to Integer and Double types).</summary>
+        public double? MaxValue { get; set; }
+
+        // ── ResourceReference hints ───────────────────────────────────────────
+
+        /// <summary>
+        /// When <see cref="DataType"/> is <c>ResourceReference</c>, restricts the
+        /// picker to resources of this type.  Null = any type.
+        /// </summary>
+        public ResourceType? AllowedReferenceType { get; set; }
+
+        // ── Lifecycle ─────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Deprecated definitions are hidden in the creation UI but retained
+        /// so existing values remain readable.
+        /// </summary>
+        public bool IsDeprecated { get; set; } = false;
+
+        // ── Navigation ────────────────────────────────────────────────────────
+
+        [ForeignKey(nameof(ResourceTypeSchemaId))]
+        public ResourceTypeSchema ResourceTypeSchema { get; set; } = null!;
+
+        /// <summary>
+        /// Allowed dropdown options — only populated when
+        /// <see cref="DataType"/> is <see cref="AttributeDataType.Enum"/>.
+        /// </summary>
+        public ICollection<ResourceAttributeEnumOption> EnumOptions { get; set; }
+            = new List<ResourceAttributeEnumOption>();
+
+        /// <summary>All concrete values recorded for this definition across all resources.</summary>
+        public ICollection<ResourceAttributeValue> Values { get; set; }
+            = new List<ResourceAttributeValue>();
+    }
+
+
+    // =========================================================================
+    // RESOURCE ATTRIBUTE ENUM OPTION  (dropdown choice)
+    // =========================================================================
+
+    /// <summary>
+    /// A single allowed option for an <see cref="AttributeDataType.Enum"/> attribute.
+    /// Business users manage this list in the UI; the chosen option's
+    /// <see cref="Value"/> key is stored in <see cref="ResourceAttributeValue.ValueString"/>.
+    /// </summary>
+    public class ResourceAttributeEnumOption : BaseEntity
+    {
+        [Required]
+        public Guid ResourceAttributeDefinitionId { get; set; }
+
+        /// <summary>Stable machine key stored as the attribute value (e.g. "windows_server_2022").</summary>
+        [Required, MaxLength(128)]
+        public string Value { get; set; } = string.Empty;
+
+        /// <summary>Human-readable label shown in the dropdown (e.g. "Windows Server 2022").</summary>
+        [Required, MaxLength(256)]
+        public string Label { get; set; } = string.Empty;
+
+        [MaxLength(512)]
+        public string? Description { get; set; }
+
+        /// <summary>Optional hex colour for badge/chip rendering in the UI (e.g. "#4CAF50").</summary>
+        [MaxLength(16)]
+        public string? BadgeColour { get; set; }
+
+        /// <summary>Render order in the dropdown list.</summary>
+        public int DisplayOrder { get; set; } = 0;
+
+        public bool IsActive { get; set; } = true;
+
+        // ── Navigation ────────────────────────────────────────────────────────
+
+        [ForeignKey(nameof(ResourceAttributeDefinitionId))]
+        public ResourceAttributeDefinition AttributeDefinition { get; set; } = null!;
+    }
+
+
+    // =========================================================================
+    // RESOURCE ATTRIBUTE VALUE  (one typed field value on a resource instance)
+    // =========================================================================
+
+    /// <summary>
+    /// Stores the actual value of one attribute on one <see cref="Resource"/>
+    /// instance.  The appropriate typed column is populated based on the
+    /// attribute definition's <see cref="AttributeDataType"/>; all other typed
+    /// columns are null.
+    /// <br/>
+    /// Multi-value attributes (IsMultiValue = true) are modelled as multiple
+    /// <see cref="ResourceAttributeValue"/> rows sharing the same
+    /// <see cref="ResourceId"/> and <see cref="ResourceAttributeDefinitionId"/>.
+    /// </summary>
+    public class ResourceAttributeValue : BaseEntity
+    {
+        [Required]
+        public Guid ResourceId { get; set; }
+
+        [Required]
+        public Guid ResourceAttributeDefinitionId { get; set; }
+
+        // ── Typed value columns ───────────────────────────────────────────────
+        // Only the column matching the definition's DataType will be non-null.
+        // ─ String, Text, Url, Enum (option key), ResourceReference (Guid string):
+        [MaxLength(2048)]
+        public string? ValueString { get; set; }
+
+        // ─ Integer:
+        public int? ValueInt { get; set; }
+
+        // ─ Double:
+        public double? ValueDouble { get; set; }
+
+        // ─ Boolean:
+        public bool? ValueBool { get; set; }
+
+        // ─ DateTime (always stored as UTC):
+        public DateTime? ValueDateTime { get; set; }
+
+        // ── Multi-value ordering ──────────────────────────────────────────────
+
+        /// <summary>
+        /// Position when the same resource has multiple values for the same
+        /// attribute (IsMultiValue = true).  Null for single-value attributes.
+        /// </summary>
+        public int? Ordinal { get; set; }
+
+        // ── Navigation ────────────────────────────────────────────────────────
+
+        [ForeignKey(nameof(ResourceId))]
+        public Resource Resource { get; set; } = null!;
+
+        [ForeignKey(nameof(ResourceAttributeDefinitionId))]
+        public ResourceAttributeDefinition AttributeDefinition { get; set; } = null!;
+
+        // ── Convenience accessor ──────────────────────────────────────────────
+
+        /// <summary>
+        /// Returns the stored value box-typed to <c>object</c> based on the
+        /// definition's <see cref="AttributeDataType"/>.  Requires
+        /// <see cref="AttributeDefinition"/> to be loaded.
+        /// </summary>
+        [NotMapped]
+        public object? TypedValue => AttributeDefinition?.DataType switch
+        {
+            AttributeDataType.Integer => ValueInt,
+            AttributeDataType.Double => ValueDouble,
+            AttributeDataType.Boolean => ValueBool,
+            AttributeDataType.DateTime => ValueDateTime,
+            _ => ValueString   // String, Text, Url, Enum, ResourceReference
+        };
+    }
+
+
+    // =========================================================================
+    // ATTRIBUTE VALUE VALIDATOR  (domain helper)
+    // =========================================================================
+
+    /// <summary>
+    /// Validates a <see cref="ResourceAttributeValue"/> against its
+    /// <see cref="ResourceAttributeDefinition"/> before persistence.
+    /// Returns a list of human-readable error messages (empty = valid).
+    /// </summary>
+    public static class AttributeValueValidator
+    {
+        public static IReadOnlyList<string> Validate(
+            ResourceAttributeValue value,
+            ResourceAttributeDefinition definition)
+        {
+            var errors = new List<string>();
+
+            // ── Required check ────────────────────────────────────────────────
+            if (definition.IsRequired && value.TypedValue is null)
+            {
+                errors.Add($"'{definition.Label}' is required.");
+                return errors; // further checks meaningless without a value
+            }
+
+            if (value.TypedValue is null) return errors;
+
+            switch (definition.DataType)
+            {
+                case AttributeDataType.String:
+                case AttributeDataType.Text:
+                case AttributeDataType.Url:
+                    {
+                        var s = value.ValueString ?? string.Empty;
+                        if (definition.MinLength.HasValue && s.Length < definition.MinLength)
+                            errors.Add($"'{definition.Label}' must be at least {definition.MinLength} characters.");
+                        if (definition.MaxLength.HasValue && s.Length > definition.MaxLength)
+                            errors.Add($"'{definition.Label}' must not exceed {definition.MaxLength} characters.");
+                        if (!string.IsNullOrEmpty(definition.RegexPattern)
+                            && !System.Text.RegularExpressions.Regex.IsMatch(s, definition.RegexPattern))
+                            errors.Add($"'{definition.Label}' does not match the required format.");
+                        break;
+                    }
+
+                case AttributeDataType.Integer:
+                    {
+                        var i = (double)(value.ValueInt ?? 0);
+                        if (definition.MinValue.HasValue && i < definition.MinValue)
+                            errors.Add($"'{definition.Label}' must be ≥ {definition.MinValue}.");
+                        if (definition.MaxValue.HasValue && i > definition.MaxValue)
+                            errors.Add($"'{definition.Label}' must be ≤ {definition.MaxValue}.");
+                        break;
+                    }
+
+                case AttributeDataType.Double:
+                    {
+                        var d = value.ValueDouble ?? 0d;
+                        if (definition.MinValue.HasValue && d < definition.MinValue)
+                            errors.Add($"'{definition.Label}' must be ≥ {definition.MinValue}.");
+                        if (definition.MaxValue.HasValue && d > definition.MaxValue)
+                            errors.Add($"'{definition.Label}' must be ≤ {definition.MaxValue}.");
+                        break;
+                    }
+
+                case AttributeDataType.Enum:
+                    {
+                        var chosen = value.ValueString;
+                        var validKeys = definition.EnumOptions
+                            .Where(o => o.IsActive)
+                            .Select(o => o.Value)
+                            .ToHashSet();
+                        if (!string.IsNullOrEmpty(chosen) && !validKeys.Contains(chosen))
+                            errors.Add($"'{chosen}' is not a valid option for '{definition.Label}'.");
+                        break;
+                    }
+
+                case AttributeDataType.ResourceReference:
+                    {
+                        if (!Guid.TryParse(value.ValueString, out _))
+                            errors.Add($"'{definition.Label}' must be a valid resource identifier (GUID).");
+                        break;
+                    }
+            }
+
+            return errors;
+        }
     }
 
 
@@ -239,7 +642,14 @@ namespace ITGovernance.Domain
         /// Arbitrary JSON blob for type-specific attributes
         /// (IP address for an Endpoint, ARN for a cloud resource, etc.).
         /// </summary>
-        public string? AttributesJson { get; set; }
+        // ── Typed attribute values ────────────────────────────────────────────
+
+        /// <summary>
+        /// The concrete typed attribute values for this resource instance.
+        /// Each value corresponds to a <see cref="ResourceAttributeDefinition"/>
+        /// declared on the <see cref="ResourceTypeSchema"/> for <see cref="Type"/>.
+        /// </summary>
+        public ICollection<ResourceAttributeValue> AttributeValues { get; set; } = new List<ResourceAttributeValue>();
 
         // ── Relationships ─────────────────────────────────────────────────────
 
