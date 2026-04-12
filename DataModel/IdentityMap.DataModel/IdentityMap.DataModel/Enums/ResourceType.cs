@@ -1,0 +1,31 @@
+﻿namespace IdentityMap.DataModel.Enums
+{
+    public enum ResourceType
+    {
+        Organization,
+        Region,
+        Office,
+        DataCenter,
+        CloudProvider,
+        CloudRegion,
+        NetworkDevice,
+        Server,
+        VM,
+        Container,
+        Storage,
+        NAS,
+        FileShare,
+        File,
+        Application,
+        Api,
+        RestEndpoint,
+        Database,
+        Schema,
+        Table,
+        IdentityProvider,
+        Domain,
+        User,
+        ServiceAccount,
+        Group
+    }
+}
