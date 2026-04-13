@@ -1,5 +1,6 @@
 ﻿using IdentityMap.DataModel.Entities;
 using IdentityMap.DataModel.Enums;
+using Spectre.Console;
 
 namespace IdentityMap.DataModel
 {
@@ -38,6 +39,128 @@ namespace IdentityMap.DataModel
         static readonly Guid Grant_WebAppUsers_ExecEndpoint = new("60000000-0000-0000-0000-000000000001");
         static readonly Guid Grant_SqlAcct_ReadDb = new("60000000-0000-0000-0000-000000000002");
         static readonly Guid Grant_SqlRole_ReadDb = new("60000000-0000-0000-0000-000000000003");
+
+        static void PrintGraphNeo4jStyle(AccessGraphContext ctx)
+        {
+            // Print all nodes
+            AnsiConsole.MarkupLine("[bold yellow]NODES[/]");
+            var table = new Table().Border(TableBorder.Rounded);
+            table.AddColumn("Id");
+            table.AddColumn("Type");
+            table.AddColumn("Name");
+            table.AddColumn("Sensitivity");
+            foreach (var r in ctx.Resources)
+            {
+                table.AddRow(
+                    r.Id.ToString(),
+                    r.Type.ToString(),
+                    r.Name,
+                    r.Sensitivity.ToString()
+                );
+            }
+            AnsiConsole.Write(table);
+
+            // Print all relationships
+            AnsiConsole.MarkupLine("\n[bold yellow]RELATIONSHIPS[/]");
+            var relTable = new Table().Border(TableBorder.Rounded);
+            relTable.AddColumn("Parent");
+            relTable.AddColumn("Type");
+            relTable.AddColumn("Child");
+            relTable.AddColumn("Notes");
+            foreach (var rel in ctx.Relationships)
+            {
+                var parent = ctx.FindResource(rel.ParentResourceId)?.Name ?? rel.ParentResourceId.ToString();
+                var child = ctx.FindResource(rel.ChildResourceId)?.Name ?? rel.ChildResourceId.ToString();
+                relTable.AddRow(parent, rel.Type.ToString(), child, rel.Notes ?? "");
+            }
+            AnsiConsole.Write(relTable);
+
+            // Print all memberships
+            AnsiConsole.MarkupLine("\n[bold yellow]MEMBERSHIPS[/]");
+            var memTable = new Table().Border(TableBorder.Rounded);
+            memTable.AddColumn("Group");
+            memTable.AddColumn("Member");
+            memTable.AddColumn("Role");
+            foreach (var m in ctx.Memberships)
+            {
+                var group = ctx.FindResource(m.BusinessAppResourceId)?.Name ?? m.BusinessAppResourceId.ToString();
+                var member = ctx.FindResource(m.MemberResourceId)?.Name ?? m.MemberResourceId.ToString();
+                memTable.AddRow(group, member, m.Role);
+            }
+            AnsiConsole.Write(memTable);
+
+            // Print all capabilities
+            AnsiConsole.MarkupLine("\n[bold yellow]CAPABILITIES[/]");
+            var capTable = new Table().Border(TableBorder.Rounded);
+            capTable.AddColumn("Resource");
+            capTable.AddColumn("Type");
+            capTable.AddColumn("Scope");
+            capTable.AddColumn("Description");
+            foreach (var cap in ctx.Capabilities)
+            {
+                var resource = ctx.FindResource(cap.ResourceId)?.Name ?? cap.ResourceId.ToString();
+                capTable.AddRow(resource, cap.Type.ToString(), cap.Scope.ToString(), cap.Description ?? "");
+            }
+            AnsiConsole.Write(capTable);
+
+            // Print all grants
+            AnsiConsole.MarkupLine("\n[bold yellow]GRANTS[/]");
+            var grantTable = new Table().Border(TableBorder.Rounded);
+            grantTable.AddColumn("Subject");
+            grantTable.AddColumn("Capability");
+            grantTable.AddColumn("Status");
+            grantTable.AddColumn("Justification");
+            foreach (var g in ctx.Grants)
+            {
+                var subject = ctx.FindResource(g.SubjectResourceId)?.Name ?? g.SubjectResourceId.ToString();
+                var cap = ctx.Capabilities.FirstOrDefault(c => c.Id == g.ResourceCapabilityId);
+                var capDesc = cap != null ? $"{cap.Type} on {ctx.FindResource(cap.ResourceId)?.Name}" : g.ResourceCapabilityId.ToString();
+                grantTable.AddRow(subject, capDesc, g.Status.ToString(), g.Justification ?? "");
+            }
+            AnsiConsole.Write(grantTable);
+        }
+
+        static void PrintCapabilityTraversal(Guid sensitiveResourceId, AccessGraphContext ctx)
+        {
+            var touchpoints = AccessGraphResolver.FindTouchpoints(sensitiveResourceId, ctx);
+            AnsiConsole.MarkupLine("\n[bold yellow]CAPABILITY TRAVERSAL FROM SENSITIVE RESOURCE[/]");
+
+            if (touchpoints.Count == 0)
+            {
+                AnsiConsole.MarkupLine("[red]No touchpoints found.[/]");
+                return;
+            }
+
+            // Create a tree and use a map keyed by the full path string so we can
+            // deterministically attach nodes to their parent nodes.
+            var tree = new Tree("[bold red]Access Traversal[/]");
+            var nodesByPath = new Dictionary<string, TreeNode>();
+
+            // Root touchpoint (the sensitive source)
+            var rootTp = touchpoints[0];
+            var rootPathKey = string.Join(" -> ", rootTp.PathFromSource);
+            var rootNode = tree.AddNode($"[bold red]{rootTp.Resource.Name}[/] [grey]({rootTp.Resource.Type})[/] [yellow]Sensitivity: {rootTp.EffectiveSensitivity}[/]");
+            nodesByPath[rootPathKey] = rootNode;
+
+            // Add the rest of the discovered touchpoints, attaching each under the
+            // node representing its parent path in the traversal.
+            foreach (var tp in touchpoints.Skip(1))
+            {
+                var pathKey = string.Join(" -> ", tp.PathFromSource);
+                var parentPathKey = string.Join(" -> ", tp.PathFromSource.Take(tp.PathFromSource.Count - 1));
+
+                if (!nodesByPath.TryGetValue(parentPathKey, out var parentNode))
+                {
+                    // Fallback to root if parent isn't found (defensive).
+                    parentNode = rootNode;
+                }
+
+                var node = parentNode.AddNode($"[white]{tp.Resource.Name}[/] [grey]({tp.Resource.Type})[/] [yellow]← {tp.EdgeLabel}[/] [red]Depth:{tp.Depth}[/]");
+                nodesByPath[pathKey] = node;
+            }
+
+            AnsiConsole.Write(tree);
+        }
 
         static void Main(string[] args)
         {
@@ -406,9 +529,8 @@ namespace IdentityMap.DataModel
                 Justification = "DB-Readers AD group mapped to this SQL role for legacy reporting access.",
                 ActivatedAt = new DateTime(2023, 6, 1, 0, 0, 0, DateTimeKind.Utc)
             });
-
-            AccessGraphResolver.PrintSensitivityReport(Id_SqlDb_Customers, ctx);
-
+            PrintGraphNeo4jStyle(ctx);
+            PrintCapabilityTraversal(Id_SqlDb_Customers, ctx);
         }
 
         static ResourceRelationship Rel(Guid parentId, Guid childId,
