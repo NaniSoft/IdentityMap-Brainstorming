@@ -3,9 +3,13 @@
     public enum AttributeDataType
     {
         String,
-        Int,
-        Bool,
+        Integer,
+        Double,
+        Boolean,
         DateTime,
-        Json
+        Enum,
+        ResourceReference,
+        Text,
+        Url
     }
 }
