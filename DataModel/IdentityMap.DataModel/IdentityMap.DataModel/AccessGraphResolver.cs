@@ -5,10 +5,6 @@ namespace IdentityMap.DataModel
 {
     public static class AccessGraphResolver
     {
-        /// <summary>
-        /// Finds all access touchpoints starting from the given sensitive resource.
-        /// Returns them in BFS order (shallowest first).
-        /// </summary>
         public static IReadOnlyList<AccessTouchpoint> FindTouchpoints(
             Guid sensitiveResourceId,
             AccessGraphContext ctx,
@@ -20,7 +16,6 @@ namespace IdentityMap.DataModel
             var results = new List<AccessTouchpoint>();
             var visited = new HashSet<Guid>();
 
-            // Queue item: (resource, edgeLabel, pathSoFar)
             var queue = new Queue<(Resource resource, string edge, List<string> path)>();
 
             void Enqueue(Resource r, string edge, List<string> path)
@@ -79,8 +74,7 @@ namespace IdentityMap.DataModel
                     {
                         Referencing = ctx.FindResource(v.ResourceId),
                         AttrKey = ctx.AttributeDefinitions
-                            .FirstOrDefault(d => d.Id == v.ResourceAttributeDefinitionId)?.Key
-                            ?? "ref"
+                            .FirstOrDefault(d => d.Id == v.ResourceAttributeDefinitionId)?.Key ?? "ref"
                     })
                     .Where(x => x.Referencing != null);
 
@@ -126,30 +120,35 @@ namespace IdentityMap.DataModel
                         new List<string>(path) { $"[{label}] {consumer!.Name}" });
                 }
 
-                // ── Rule 4: Children of this resource with active grants ───────
-                var childResIds = ctx.Relationships
-                    .Where(rel => rel.ParentResourceId == resource.Id
-                               && (rel.Type == RelationshipType.HostedIn
-                                || rel.Type == RelationshipType.BelongsTo))
-                    .Select(rel => rel.ChildResourceId)
-                    .ToHashSet();
+                // ── Rule 4: ContentBinding forward (this resource is the source) ─
+                // Replaces the old "children with any active grants" broadcast.
+                // Only surfaces resources explicitly declared as consumers of THIS
+                // content source — no false positives from unrelated siblings.
+                var bindingsAsSource = ctx.ContentBindings
+                    .Where(b => b.IsActive && b.ContentSourceId == resource.Id);
 
-                var childrenWithGrants = ctx.Capabilities
-                    .Where(c => childResIds.Contains(c.ResourceId)
-                             && c.Scope == CapabilityScope.ContentAccess)
-                    .Select(c => c.ResourceId)
-                    .Distinct()
-                    .Where(cid => ctx.Grants.Any(g =>
-                        g.Status == GrantStatus.Active &&
-                        ctx.Capabilities.Any(cap => cap.Id == g.ResourceCapabilityId && cap.ResourceId == cid)));
-
-                foreach (var childId in childrenWithGrants)
+                foreach (var binding in bindingsAsSource)
                 {
-                    var child = ctx.FindResource(childId);
-                    if (child == null) continue;
-                    var label = $"ContentOf:{resource.Name}";
-                    Enqueue(child, label,
-                        new List<string>(path) { $"[{label}] {child.Name}" });
+                    // Visit the consumer (e.g. the specific endpoint)
+                    var consumer = ctx.FindResource(binding.ConsumerResourceId);
+                    if (consumer != null)
+                    {
+                        var label = $"ContentBinding:{binding.AccessType}:Consumer";
+                        Enqueue(consumer, label,
+                            new List<string>(path) { $"[{label}] {consumer.Name}" });
+                    }
+
+                    // Visit the accessor identity if declared (e.g. SQL service account)
+                    if (binding.AccessorResourceId.HasValue)
+                    {
+                        var accessor = ctx.FindResource(binding.AccessorResourceId.Value);
+                        if (accessor != null)
+                        {
+                            var label = $"ContentBinding:{binding.AccessType}:Accessor";
+                            Enqueue(accessor, label,
+                                new List<string>(path) { $"[{label}] {accessor.Name}" });
+                        }
+                    }
                 }
 
                 // ── Rule 5: Group / BusinessApp members ───────────────────────
@@ -167,6 +166,22 @@ namespace IdentityMap.DataModel
                         Enqueue(member!, label,
                             new List<string>(path) { $"[{label}] {member!.Name}" });
                     }
+                }
+
+                // ── Rule 6: ContentBinding reverse (this resource is a consumer) ─
+                // When traversal arrives at an endpoint via grants or group membership,
+                // also walk back to the content sources it is bound to.
+                // This enables full-graph traversal regardless of traversal start point.
+                var bindingsAsConsumer = ctx.ContentBindings
+                    .Where(b => b.IsActive && b.ConsumerResourceId == resource.Id);
+
+                foreach (var binding in bindingsAsConsumer)
+                {
+                    var src = ctx.FindResource(binding.ContentSourceId);
+                    if (src == null) continue;
+                    var label = $"ServesContentFrom:{src.Name}";
+                    Enqueue(src, label,
+                        new List<string>(path) { $"[{label}] {src.Name}" });
                 }
             }
 

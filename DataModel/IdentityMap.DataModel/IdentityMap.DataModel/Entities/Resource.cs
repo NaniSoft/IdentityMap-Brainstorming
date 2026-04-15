@@ -53,5 +53,14 @@ namespace IdentityMap.DataModel.Entities
 
         public ICollection<BusinessAppMembership> BusinessAppMemberships { get; set; }
             = new List<BusinessAppMembership>();
+
+        public ICollection<ContentBinding> ContentBindingsAsConsumer { get; set; }
+            = new List<ContentBinding>();
+
+        public ICollection<ContentBinding> ContentBindingsAsSource { get; set; }
+            = new List<ContentBinding>();
+
+        public ICollection<ContentBinding> ContentBindingsAsAccessor { get; set; }
+            = new List<ContentBinding>();
     }
 }

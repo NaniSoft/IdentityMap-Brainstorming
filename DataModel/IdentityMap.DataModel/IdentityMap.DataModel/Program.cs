@@ -118,6 +118,33 @@ namespace IdentityMap.DataModel
                 grantTable.AddRow(subject, capDesc, g.Status.ToString(), g.Justification ?? "");
             }
             AnsiConsole.Write(grantTable);
+
+            // Print all content bindings
+            AnsiConsole.MarkupLine("\n[bold yellow]CONTENT BINDINGS[/]");
+            var bindingTable = new Table().Border(TableBorder.Rounded);
+            bindingTable.AddColumn("Source");
+            bindingTable.AddColumn("Consumer");
+            bindingTable.AddColumn("Accessor");
+            bindingTable.AddColumn("AccessType");
+            bindingTable.AddColumn("IsActive");
+            bindingTable.AddColumn("Description");
+            foreach (var b in ctx.ContentBindings)
+            {
+                var source = ctx.FindResource(b.ContentSourceId)?.Name ?? b.ContentSourceId.ToString();
+                var consumer = ctx.FindResource(b.ConsumerResourceId)?.Name ?? b.ConsumerResourceId.ToString();
+                var accessor = b.AccessorResourceId.HasValue
+                    ? ctx.FindResource(b.AccessorResourceId.Value)?.Name ?? b.AccessorResourceId.ToString()
+                    : "";
+                bindingTable.AddRow(
+                    source,
+                    consumer,
+                    accessor,
+                    b.AccessType.ToString(),
+                    b.IsActive ? "Yes" : "No",
+                    b.Description ?? ""
+                );
+            }
+            AnsiConsole.Write(bindingTable);
         }
 
         static void PrintCapabilityTraversal(Guid sensitiveResourceId, AccessGraphContext ctx)

@@ -12,6 +12,7 @@ namespace IdentityMap.DataModel
         public List<ResourceAttributeValue> AttributeValues { get; } = new();
         public List<ResourceAttributeDefinition> AttributeDefinitions { get; } = new();
         public List<ResourceOwnership> Ownerships { get; } = new();
+        public List<ContentBinding> ContentBindings { get; } = new();
 
         public Resource? FindResource(Guid id) =>
             Resources.FirstOrDefault(r => r.Id == id);
