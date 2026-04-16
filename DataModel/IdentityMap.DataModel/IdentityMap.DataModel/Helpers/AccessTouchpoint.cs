@@ -1,7 +1,7 @@
 ﻿using IdentityMap.DataModel.Entities;
 using IdentityMap.DataModel.Enums;
 
-namespace IdentityMap.DataModel
+namespace IdentityMap.DataModel.Helpers
 {
     public record AccessTouchpoint
     {

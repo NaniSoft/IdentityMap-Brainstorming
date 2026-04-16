@@ -1,7 +1,7 @@
 ﻿using IdentityMap.DataModel.Entities;
 using IdentityMap.DataModel.Enums;
 
-namespace IdentityMap.DataModel
+namespace IdentityMap.DataModel.Helpers
 {
     public static class AccessGraphResolver
     {
@@ -203,6 +203,34 @@ namespace IdentityMap.DataModel
                 .GroupBy(t => t.Resource.Id)
                 .Select(g => g.First())
                 .ToList();
+        }
+
+        /// <summary>
+        /// Prints a formatted sensitivity report to Console.Out.
+        /// </summary>
+        public static void PrintSensitivityReport(
+            Guid sensitiveResourceId,
+            AccessGraphContext ctx)
+        {
+            var source = ctx.FindResource(sensitiveResourceId)!;
+            Console.WriteLine(
+                $"\n{'=',60}\n  SENSITIVITY REPORT\n  Source: {source.Name} " +
+                $"[{source.Type}]  Sensitivity: {source.Sensitivity}\n{'=',60}");
+
+            var touchpoints = FindTouchpoints(sensitiveResourceId, ctx);
+
+            foreach (var tp in touchpoints.Skip(1)) // skip source itself
+            {
+                var indent = new string(' ', tp.Depth * 2);
+                Console.WriteLine($"{indent}[{tp.Depth}] {tp.Resource.Type,-20} {tp.Resource.Name,-30} ← {tp.EdgeLabel}");
+            }
+
+            Console.WriteLine($"\nTotal access touchpoints: {touchpoints.Count - 1}");
+
+            var humans = FindHumanAccessors(sensitiveResourceId, ctx);
+            Console.WriteLine($"Unique human/service-account endpoints: {humans.Count}");
+            foreach (var h in humans)
+                Console.WriteLine($"  • {h.Resource.Type}/{h.Resource.Name}  (via {h.EdgeLabel})");
         }
     }
 }

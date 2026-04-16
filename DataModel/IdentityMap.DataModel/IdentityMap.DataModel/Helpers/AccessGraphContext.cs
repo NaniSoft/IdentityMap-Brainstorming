@@ -1,6 +1,6 @@
 ﻿using IdentityMap.DataModel.Entities;
 
-namespace IdentityMap.DataModel
+namespace IdentityMap.DataModel.Helpers
 {
     public class AccessGraphContext
     {

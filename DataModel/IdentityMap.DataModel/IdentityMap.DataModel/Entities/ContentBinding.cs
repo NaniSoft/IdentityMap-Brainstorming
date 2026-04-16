@@ -14,6 +14,11 @@ namespace IdentityMap.DataModel.Entities
         public ContentBindingAccessType AccessType { get; set; }
             = ContentBindingAccessType.Read;
 
+        public ContentBindingRole Role { get; set; }
+            = ContentBindingRole.PrimarySource;
+
+        public string? ContributionDescription { get; set; }
+
         public bool IsActive { get; set; } = true;
 
         public string? Description { get; set; }
