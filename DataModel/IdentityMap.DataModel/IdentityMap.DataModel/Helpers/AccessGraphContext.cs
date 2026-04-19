@@ -13,6 +13,7 @@ namespace IdentityMap.DataModel.Helpers
         public List<ResourceAttributeDefinition> AttributeDefinitions { get; } = new();
         public List<ResourceOwnership> Ownerships { get; } = new();
         public List<ContentBinding> ContentBindings { get; } = new();
+        public List<ResourcePolicy> Policies { get; } = new();
 
         public Resource? FindResource(Guid id) =>
             Resources.FirstOrDefault(r => r.Id == id);

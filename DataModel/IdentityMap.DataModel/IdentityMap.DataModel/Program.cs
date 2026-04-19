@@ -412,7 +412,7 @@ namespace IdentityMap.DataModel
                 ContentSchemaDescription = "{ customer_id, ssn_encrypted, ssn_last4, kyc_date }",
                 Sensitivity = SensitivityClassification.TopSecret,
                 Status = "Active",
-                Tags = T("tier:database", "kind:row", "pii", "pci", "kyc")
+                Tags = T("tier:database", "kind:row"),
             };
             var row_salaryRecord = new Resource
             {
@@ -1149,6 +1149,22 @@ namespace IdentityMap.DataModel
                 }
             });
 
+            // And separately register policies:
+            ctx.Policies.Add(new ResourcePolicy
+            {
+                ResourceId = Id_Tbl_Payments,
+                Framework = ComplianceFramework.PCIDSS,
+                SubClassification = "CDE",
+                EffectiveDate = DateTime.UtcNow
+            });
+            ctx.Policies.Add(new ResourcePolicy
+            {
+                ResourceId = Id_Tbl_Customers,
+                Framework = ComplianceFramework.GDPR,
+                SubClassification = "PersonalData",
+                EffectiveDate = DateTime.UtcNow
+            });
+
             // ═════════════════════════════════════════════════════════════════════
             // REPORTS
             // ═════════════════════════════════════════════════════════════════════
@@ -1409,9 +1425,16 @@ namespace IdentityMap.DataModel
                 Id = Guid.NewGuid(),
                 BusinessAppResourceId = groupId,
                 MemberResourceId = memberId,
-                Role = role,
+                Role = TryConvertToEnum<MembershipRole>(role),
                 IsActive = true
             };
+
+        static T TryConvertToEnum<T>(string value) where T : struct, Enum
+        {
+            // TryParse with case-insensitive option
+            Enum.TryParse(value, ignoreCase: true, out T result);
+            return result;
+        }
 
         // ═════════════════════════════════════════════════════════════════════════
         // PRINT HELPERS
@@ -1446,7 +1469,7 @@ namespace IdentityMap.DataModel
             {
                 var group = ctx.FindResource(m.BusinessAppResourceId)?.Name ?? m.BusinessAppResourceId.ToString()[..8];
                 var member = ctx.FindResource(m.MemberResourceId)?.Name ?? m.MemberResourceId.ToString()[..8];
-                memTable.AddRow(group, member, m.Role);
+                memTable.AddRow(group, member, m.Role.ToString());
             }
             AnsiConsole.Write(memTable);
 

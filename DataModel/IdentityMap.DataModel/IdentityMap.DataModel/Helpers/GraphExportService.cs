@@ -148,7 +148,7 @@ namespace IdentityMap.DataModel.Helpers
                     SensitivityLevel = (int)r.Sensitivity,
                     Status = r.Status,
                     Description = r.Description,
-                    ContentAccessModel = r.ContentAccessModel?.ToString(),
+                    ContentAccessModel = r.ContentAccessModel.ToString(),
                     ContentNature = r.ContentNature?.ToString(),
                     ContentSchemaDescription = r.ContentSchemaDescription,
                     Tags = tags
@@ -186,7 +186,7 @@ namespace IdentityMap.DataModel.Helpers
                     Target = Fmt(m.MemberResourceId),
                     EdgeKind = "Membership",
                     Label = "MemberOf",
-                    MemberRole = m.Role,
+                    MemberRole = m.Role.ToString(),
                     IsActive = m.IsActive
                 }
             };

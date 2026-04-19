@@ -79,10 +79,9 @@ namespace IdentityMap.DataModel.Helpers
                     break;
 
                 case OwnerType.BusinessApp:
-                    foreach (var m in memberships.Where(m =>
-                        m.BusinessAppResourceId == owner.Id
-                        && m.IsActive
-                        && m.Role == "Owner"))
+                    foreach (var m in memberships.Where(m => m.BusinessAppResourceId == owner.Id
+                    && m.IsActive
+                    && m.Role is MembershipRole.Owner or MembershipRole.Delegate))
                     {
                         var member = allResources.First(r => r.Id == m.MemberResourceId);
                         if (member.Type == ResourceType.Account)
