@@ -7,55 +7,51 @@ namespace IdentityMap.DataModel
 {
     internal class Program
     {
-        // ═══════════════════════════════════════════════════════════════════════════
-        // WELL-KNOWN IDs  — fixed so the scenario is repeatable and readable in tests
-        // ═══════════════════════════════════════════════════════════════════════════
+        // ═══════════════════════════════════════════════════════════════════════
+        // WELL-KNOWN IDs  — fixed so the scenario is repeatable and readable.
+        // ═══════════════════════════════════════════════════════════════════════
 
-        // ── Identity Provider ──────────────────────────────────────────────────────
+        // ── Identity Provider
         static readonly Guid Id_AD = new("10000000-0000-0000-0000-000000000001");
 
-        // ── Human User Accounts (10 users) ────────────────────────────────────────
-        //    Primary low-privilege AD accounts used for day-to-day work.
-        static readonly Guid Id_Alice = new("10000000-0000-0000-0000-000000000010"); // Senior Developer
-        static readonly Guid Id_Bob = new("10000000-0000-0000-0000-000000000011"); // Data Analyst
-        static readonly Guid Id_Carol = new("10000000-0000-0000-0000-000000000012"); // DBA
-        static readonly Guid Id_Dave = new("10000000-0000-0000-0000-000000000013"); // App Admin
-        static readonly Guid Id_Eve = new("10000000-0000-0000-0000-000000000014"); // Security Officer
-        static readonly Guid Id_Frank = new("10000000-0000-0000-0000-000000000015"); // Developer
-        static readonly Guid Id_Grace = new("10000000-0000-0000-0000-000000000016"); // Business Analyst
-        static readonly Guid Id_Harry = new("10000000-0000-0000-0000-000000000017"); // IT Manager / Executive
-        static readonly Guid Id_Ivan = new("10000000-0000-0000-0000-000000000018"); // DevOps Engineer
-        static readonly Guid Id_Judy = new("10000000-0000-0000-0000-000000000019"); // Internal Auditor
+        // ── Human User Accounts (10 users)
+        static readonly Guid Id_Alice = new("10000000-0000-0000-0000-000000000010");
+        static readonly Guid Id_Bob = new("10000000-0000-0000-0000-000000000011");
+        static readonly Guid Id_Carol = new("10000000-0000-0000-0000-000000000012");
+        static readonly Guid Id_Dave = new("10000000-0000-0000-0000-000000000013");
+        static readonly Guid Id_Eve = new("10000000-0000-0000-0000-000000000014");
+        static readonly Guid Id_Frank = new("10000000-0000-0000-0000-000000000015");
+        static readonly Guid Id_Grace = new("10000000-0000-0000-0000-000000000016");
+        static readonly Guid Id_Harry = new("10000000-0000-0000-0000-000000000017");
+        static readonly Guid Id_Ivan = new("10000000-0000-0000-0000-000000000018");
+        static readonly Guid Id_Judy = new("10000000-0000-0000-0000-000000000019");
 
-        // ── Elevated / Secondary AD Accounts  (same humans, separate privileged identity)
-        //    Real-world pattern: carol-adm@ is Carol's admin account used only for DBA work.
+        // ── Elevated / Secondary AD Accounts
         static readonly Guid Id_Alice_Adm = new("10000000-0000-0000-0000-000000000020");
         static readonly Guid Id_Carol_Adm = new("10000000-0000-0000-0000-000000000021");
         static readonly Guid Id_Dave_Adm = new("10000000-0000-0000-0000-000000000022");
 
-        // ── AD Service Accounts  (automated / machine identities in AD) ───────────
+        // ── AD Service Accounts
         static readonly Guid Id_SvcAcct_WebApp = new("10000000-0000-0000-0000-000000000030");
         static readonly Guid Id_SvcAcct_Reporting = new("10000000-0000-0000-0000-000000000031");
         static readonly Guid Id_SvcAcct_HrApp = new("10000000-0000-0000-0000-000000000032");
         static readonly Guid Id_SvcAcct_Orders = new("10000000-0000-0000-0000-000000000033");
 
-        // ── AD Groups ─────────────────────────────────────────────────────────────
-        //    Id_Grp_DataAccess wraps Id_Grp_DbReaders — demonstrating group-of-groups.
+        // ── AD Groups
         static readonly Guid Id_Grp_WebAppUsers = new("10000000-0000-0000-0000-000000000040");
         static readonly Guid Id_Grp_DbReaders = new("10000000-0000-0000-0000-000000000041");
         static readonly Guid Id_Grp_DbAdmins = new("10000000-0000-0000-0000-000000000042");
         static readonly Guid Id_Grp_HrPortalUsers = new("10000000-0000-0000-0000-000000000043");
         static readonly Guid Id_Grp_Auditors = new("10000000-0000-0000-0000-000000000044");
-        static readonly Guid Id_Grp_DataAccess = new("10000000-0000-0000-0000-000000000045"); // GROUP-OF-GROUPS
+        static readonly Guid Id_Grp_DataAccess = new("10000000-0000-0000-0000-000000000045");
         static readonly Guid Id_Grp_Executives = new("10000000-0000-0000-0000-000000000046");
         static readonly Guid Id_Grp_DevOps = new("10000000-0000-0000-0000-000000000047");
 
-        // ── SQL Server Instances ───────────────────────────────────────────────────
+        // ── SQL Server Instances
         static readonly Guid Id_SqlSrv_Prod01 = new("20000000-0000-0000-0000-000000000001");
         static readonly Guid Id_SqlSrv_Prod02 = new("20000000-0000-0000-0000-000000000002");
 
-        // ── Databases ─────────────────────────────────────────────────────────────
-        //    master databases are explicit resources — server-level logins/roles live here.
+        // ── Databases (including master)
         static readonly Guid Id_Db_Master_Prod01 = new("20000000-0000-0000-0000-000000000010");
         static readonly Guid Id_Db_Master_Prod02 = new("20000000-0000-0000-0000-000000000011");
         static readonly Guid Id_Db_CustomerData = new("20000000-0000-0000-0000-000000000012");
@@ -64,36 +60,27 @@ namespace IdentityMap.DataModel
         static readonly Guid Id_Db_HRData = new("20000000-0000-0000-0000-000000000015");
         static readonly Guid Id_Db_AuditLog = new("20000000-0000-0000-0000-000000000016");
 
-        // ── Tables  (DataStore — actual tabular data surfaces) ─────────────────────
-        static readonly Guid Id_Tbl_Customers = new("20000000-0000-0000-0000-000000000020"); // Restricted / PII
-        static readonly Guid Id_Tbl_Payments = new("20000000-0000-0000-0000-000000000021"); // TopSecret / financial
-        static readonly Guid Id_Tbl_Addresses = new("20000000-0000-0000-0000-000000000022"); // Confidential
-        static readonly Guid Id_Tbl_Orders = new("20000000-0000-0000-0000-000000000023"); // Confidential
-        static readonly Guid Id_Tbl_OrderItems = new("20000000-0000-0000-0000-000000000024"); // Internal
-        static readonly Guid Id_Tbl_Countries = new("20000000-0000-0000-0000-000000000025"); // None / public
-        static readonly Guid Id_Tbl_Employees = new("20000000-0000-0000-0000-000000000026"); // TopSecret / HR
-        static readonly Guid Id_Tbl_Salaries = new("20000000-0000-0000-0000-000000000027"); // TopSecret / salary
-        static readonly Guid Id_Tbl_AccessLog = new("20000000-0000-0000-0000-000000000028"); // Restricted / audit
+        // ── Tables  (ResourceType.Table)
+        static readonly Guid Id_Tbl_Customers = new("20000000-0000-0000-0000-000000000020");
+        static readonly Guid Id_Tbl_Payments = new("20000000-0000-0000-0000-000000000021");
+        static readonly Guid Id_Tbl_Addresses = new("20000000-0000-0000-0000-000000000022");
+        static readonly Guid Id_Tbl_Orders = new("20000000-0000-0000-0000-000000000023");
+        static readonly Guid Id_Tbl_OrderItems = new("20000000-0000-0000-0000-000000000024");
+        static readonly Guid Id_Tbl_Countries = new("20000000-0000-0000-0000-000000000025");
+        static readonly Guid Id_Tbl_Employees = new("20000000-0000-0000-0000-000000000026");
+        static readonly Guid Id_Tbl_Salaries = new("20000000-0000-0000-0000-000000000027");
+        static readonly Guid Id_Tbl_AccessLog = new("20000000-0000-0000-0000-000000000028");
 
-        // ── Sensitive Rows  (File — individual records with elevated sensitivity) ──
-        //    Real-world: a row in dbo.Customers containing SSN should be TopSecret even
-        //    if the table is only Restricted at the aggregate level.
+        // ── Sensitive Rows  (ResourceType.File)
         static readonly Guid Id_Row_CustomerSSN = new("20000000-0000-0000-0000-000000000030");
         static readonly Guid Id_Row_SalaryRecord = new("20000000-0000-0000-0000-000000000031");
 
-        // ── Server Roles  (live in master DB — server-level permission sets) ───────
+        // ── Server Roles  (hosted in master DB)
         static readonly Guid Id_SrvRole_Sysadmin = new("20000000-0000-0000-0000-000000000040");
         static readonly Guid Id_SrvRole_DbCreator = new("20000000-0000-0000-0000-000000000041");
         static readonly Guid Id_SrvRole_SecurityAdmin = new("20000000-0000-0000-0000-000000000042");
 
-        // ── Server Logins  (authenticate at server level, live in master DB) ───────
-        //    SA              — native SQL sa login (sysadmin)
-        //    WebApp          — AD-integrated, delegated from svc-webapp@corp.com
-        //    Reporting       — AD group login: AD\DB-Readers mapped directly
-        //    HrApp           — AD-integrated for HR portal
-        //    CountryRef      — native SQL, read-only, no AD linkage
-        //    CarolDba        — AD-backed from carol-adm@, has SecurityAdmin server role
-        //    Orders          — native SQL login for order processing service
+        // ── Server Logins  (hosted in master DB)
         static readonly Guid Id_Login_SA = new("20000000-0000-0000-0000-000000000050");
         static readonly Guid Id_Login_WebApp = new("20000000-0000-0000-0000-000000000051");
         static readonly Guid Id_Login_Reporting = new("20000000-0000-0000-0000-000000000052");
@@ -102,14 +89,14 @@ namespace IdentityMap.DataModel
         static readonly Guid Id_Login_CarolDba = new("20000000-0000-0000-0000-000000000055");
         static readonly Guid Id_Login_Orders = new("20000000-0000-0000-0000-000000000056");
 
-        // ── Database Roles  (scoped per database, group database-level permissions) ─
+        // ── Database Roles
         static readonly Guid Id_DbRole_CustDataReader = new("20000000-0000-0000-0000-000000000060");
         static readonly Guid Id_DbRole_CustDataWriter = new("20000000-0000-0000-0000-000000000061");
         static readonly Guid Id_DbRole_OrdersReadWrite = new("20000000-0000-0000-0000-000000000062");
         static readonly Guid Id_DbRole_HrReadOnly = new("20000000-0000-0000-0000-000000000063");
         static readonly Guid Id_DbRole_HrAdmin = new("20000000-0000-0000-0000-000000000064");
 
-        // ── Database Users  (per-database principal, maps to a server login) ────────
+        // ── Database Users
         static readonly Guid Id_DbUser_WebApp = new("20000000-0000-0000-0000-000000000070");
         static readonly Guid Id_DbUser_Reporting = new("20000000-0000-0000-0000-000000000071");
         static readonly Guid Id_DbUser_HrApp = new("20000000-0000-0000-0000-000000000072");
@@ -117,25 +104,24 @@ namespace IdentityMap.DataModel
         static readonly Guid Id_DbUser_Orders = new("20000000-0000-0000-0000-000000000074");
         static readonly Guid Id_DbUser_AuditUser = new("20000000-0000-0000-0000-000000000075");
 
-        // ── Web Applications ──────────────────────────────────────────────────────
+        // ── Web Applications
         static readonly Guid Id_WebApp_CustomerPortal = new("30000000-0000-0000-0000-000000000001");
         static readonly Guid Id_WebApp_HrPortal = new("30000000-0000-0000-0000-000000000002");
 
-        // ── Service Endpoints ─────────────────────────────────────────────────────
+        // ── Service Endpoints
         static readonly Guid Id_Ep_GetCustomers = new("30000000-0000-0000-0000-000000000010");
         static readonly Guid Id_Ep_GetCustomerById = new("30000000-0000-0000-0000-000000000011");
         static readonly Guid Id_Ep_PostOrder = new("30000000-0000-0000-0000-000000000012");
         static readonly Guid Id_Ep_GetEmployees = new("30000000-0000-0000-0000-000000000013");
         static readonly Guid Id_Ep_GetSalaries = new("30000000-0000-0000-0000-000000000014");
 
-        // ── Attribute Definition IDs ───────────────────────────────────────────────
+        // ── Attribute Definition IDs
         static readonly Guid AttrDef_LinkedAdIdentity = new("40000000-0000-0000-0000-000000000001");
         static readonly Guid AttrDef_LinkedAdGroup = new("40000000-0000-0000-0000-000000000002");
         static readonly Guid AttrDef_LinkedDbUser = new("40000000-0000-0000-0000-000000000003");
         static readonly Guid AttrDef_ParentTable = new("40000000-0000-0000-0000-000000000004");
 
-        // ── Capability IDs ─────────────────────────────────────────────────────────
-        // Endpoint capabilities
+        // ── Capability IDs — Endpoint
         static readonly Guid Cap_Ep_GetCustomers_Exec = new("50000000-0000-0000-0000-000000000001");
         static readonly Guid Cap_Ep_GetCustomerById_Exec = new("50000000-0000-0000-0000-000000000002");
         static readonly Guid Cap_Ep_PostOrder_Exec = new("50000000-0000-0000-0000-000000000003");
@@ -143,7 +129,7 @@ namespace IdentityMap.DataModel
         static readonly Guid Cap_Ep_GetEmployees_Exec = new("50000000-0000-0000-0000-000000000005");
         static readonly Guid Cap_Ep_GetSalaries_Exec = new("50000000-0000-0000-0000-000000000006");
 
-        // Table-level capabilities  (granular — the core of SQL IAM governance)
+        // ── Capability IDs — Table level
         static readonly Guid Cap_Tbl_Customers_Read = new("50000000-0000-0000-0000-000000000010");
         static readonly Guid Cap_Tbl_Customers_Write = new("50000000-0000-0000-0000-000000000011");
         static readonly Guid Cap_Tbl_Customers_Delete = new("50000000-0000-0000-0000-000000000012");
@@ -161,15 +147,12 @@ namespace IdentityMap.DataModel
         static readonly Guid Cap_Tbl_AccessLog_Read = new("50000000-0000-0000-0000-000000000024");
         static readonly Guid Cap_Tbl_AccessLog_Write = new("50000000-0000-0000-0000-000000000025");
 
-        // Database-level capabilities
+        // ── Capability IDs — DB / Server admin
         static readonly Guid Cap_Db_CustomerData_Administer = new("50000000-0000-0000-0000-000000000030");
         static readonly Guid Cap_Db_HRData_Administer = new("50000000-0000-0000-0000-000000000031");
-
-        // Server role capability
         static readonly Guid Cap_SrvRole_Sysadmin_Administer = new("50000000-0000-0000-0000-000000000035");
 
-        // ── Grant IDs ─────────────────────────────────────────────────────────────
-        // Endpoint access grants
+        // ── Grant IDs — Endpoint
         static readonly Guid Grant_WebAppUsers_GetCustomers = new("60000000-0000-0000-0000-000000000001");
         static readonly Guid Grant_WebAppUsers_GetCustomerById = new("60000000-0000-0000-0000-000000000002");
         static readonly Guid Grant_DevOps_PostOrder = new("60000000-0000-0000-0000-000000000003");
@@ -177,7 +160,7 @@ namespace IdentityMap.DataModel
         static readonly Guid Grant_Auditors_GetEmployees = new("60000000-0000-0000-0000-000000000005");
         static readonly Guid Grant_Executives_GetSalaries = new("60000000-0000-0000-0000-000000000006");
 
-        // Table-level grants (database user/role → table capability)
+        // ── Grant IDs — Table level
         static readonly Guid Grant_DbUser_WebApp_Cust_Read = new("60000000-0000-0000-0000-000000000010");
         static readonly Guid Grant_DbUser_WebApp_Addr_Read = new("60000000-0000-0000-0000-000000000011");
         static readonly Guid Grant_DbUser_WebApp_Pay_Read = new("60000000-0000-0000-0000-000000000012");
@@ -193,18 +176,12 @@ namespace IdentityMap.DataModel
         static readonly Guid Grant_DbUser_HrApp_Sal_Read = new("60000000-0000-0000-0000-000000000022");
         static readonly Guid Grant_DbUser_Audit_Emp_Read = new("60000000-0000-0000-0000-000000000023");
         static readonly Guid Grant_DbUser_Audit_Log_Read = new("60000000-0000-0000-0000-000000000024");
-        
-        // BYPASS PATH: AD\DB-Readers group has direct read on Customers table
         static readonly Guid Grant_Grp_DbReaders_Cust_Read = new("60000000-0000-0000-0000-000000000025");
-        
-        // DB admin
         static readonly Guid Grant_Carol_Administer_CustData = new("60000000-0000-0000-0000-000000000026");
         static readonly Guid Grant_Carol_Administer_HRData = new("60000000-0000-0000-0000-000000000027");
-        
-        // Server role grants
         static readonly Guid Grant_Login_SA_Sysadmin = new("60000000-0000-0000-0000-000000000030");
 
-        // ── Content Binding IDs ───────────────────────────────────────────────────
+        // ── Content Binding IDs
         static readonly Guid Binding_GetCustomers_Customers = new("70000000-0000-0000-0000-000000000001");
         static readonly Guid Binding_GetCustomers_Addresses = new("70000000-0000-0000-0000-000000000002");
         static readonly Guid Binding_GetCustomers_Countries = new("70000000-0000-0000-0000-000000000003");
@@ -214,8 +191,6 @@ namespace IdentityMap.DataModel
         static readonly Guid Binding_PostOrder_OrderItems = new("70000000-0000-0000-0000-000000000007");
         static readonly Guid Binding_GetEmployees_Employees = new("70000000-0000-0000-0000-000000000008");
         static readonly Guid Binding_GetSalaries_Salaries = new("70000000-0000-0000-0000-000000000009");
-        
-        // Row → Table bindings  (sensitivity bubbles from row up to the containing table)
         static readonly Guid Binding_Tbl_Customers_Row_SSN = new("70000000-0000-0000-0000-000000000010");
         static readonly Guid Binding_Tbl_Salaries_Row_Salary = new("70000000-0000-0000-0000-000000000011");
 
@@ -227,24 +202,25 @@ namespace IdentityMap.DataModel
 
             var ctx = new AccessGraphContext();
 
-            // ─────────────────────────────────────────────────────────────────────
-            // SECTION 1 — ACTIVE DIRECTORY: IDP, USERS, ADMIN ACCOUNTS, GROUPS
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
+            // SECTION 1 — ACTIVE DIRECTORY
+            // ─────────────────────────────────────────────────────────────────
 
             var ad = new Resource
             {
                 Id = Id_AD,
                 Name = "corp.AD",
                 Type = ResourceType.BusinessApp,
-                Description = "Corporate Active Directory. Authoritative identity provider for all human " +
-                              "and service accounts, plus all AD security groups.",
-                Status = "Active"
+                Description = "Corporate Active Directory. Authoritative identity provider for all " +
+                              "human and service accounts and security groups.",
+                Status = "Active",
+                Tags = T("tier:identity", "kind:idp")
             };
 
-            // ── 10 Human Accounts ─────────────────────────────────────────────────
+            // ── 10 Human Accounts ─────────────────────────────────────────────
             var alice = MakeAccount(Id_Alice, "alice@corp.com", "Senior Developer — CustomerPortal team.");
             var bob = MakeAccount(Id_Bob, "bob@corp.com", "Data Analyst — reads customer reports.");
-            var carol = MakeAccount(Id_Carol, "carol@corp.com", "DBA — day-to-day login; uses carol-adm for admin tasks.");
+            var carol = MakeAccount(Id_Carol, "carol@corp.com", "DBA — day-to-day login.");
             var dave = MakeAccount(Id_Dave, "dave@corp.com", "App Admin — manages CustomerPortal deployments.");
             var eve = MakeAccount(Id_Eve, "eve@corp.com", "Security Officer — reviews audit logs and policy.");
             var frank = MakeAccount(Id_Frank, "frank@corp.com", "Developer — CustomerPortal feature work.");
@@ -253,14 +229,15 @@ namespace IdentityMap.DataModel
             var ivan = MakeAccount(Id_Ivan, "ivan@corp.com", "DevOps — manages order-processing pipeline.");
             var judy = MakeAccount(Id_Judy, "judy@corp.com", "Internal Auditor — read-only access to HR and audit.");
 
-            // ── Elevated / Secondary AD Accounts  (same person, different AD principal)
+            // ── Elevated / Secondary AD Accounts
             var alice_adm = new Resource
             {
                 Id = Id_Alice_Adm,
                 Name = "alice-adm@corp.com",
                 Type = ResourceType.Account,
-                Description = "Alice's privileged AD account used only for release-approval workflows.",
-                Status = "Active"
+                Description = "Alice's privileged account for release-approval workflows.",
+                Status = "Active",
+                Tags = T("tier:identity", "kind:human", "elevated-account")
             };
             var carol_adm = new Resource
             {
@@ -269,7 +246,8 @@ namespace IdentityMap.DataModel
                 Type = ResourceType.Account,
                 Description = "Carol's DBA admin account. Member of AD\\DB-Admins. " +
                               "Never used for browsing — only for DBA operations.",
-                Status = "Active"
+                Status = "Active",
+                Tags = T("tier:identity", "kind:human", "elevated-account")
             };
             var dave_adm = new Resource
             {
@@ -277,28 +255,30 @@ namespace IdentityMap.DataModel
                 Name = "dave-adm@corp.com",
                 Type = ResourceType.Account,
                 Description = "Dave's admin account. Member of AD\\DB-Admins for deployment scripts.",
-                Status = "Active"
+                Status = "Active",
+                Tags = T("tier:identity", "kind:human", "elevated-account")
             };
 
-            // ── AD Service Accounts ────────────────────────────────────────────────
+            // ── AD Service Accounts
             var svc_webapp = new Resource
             {
                 Id = Id_SvcAcct_WebApp,
                 Name = "svc-webapp@corp.com",
                 Type = ResourceType.ServiceAccount,
                 Description = "AD service account for CustomerPortal runtime. " +
-                              "Delegated to SQL login CORP\\svc-webapp on SQLSRV-PROD-01.",
+                                 "Delegated to SQL login CORP\\svc-webapp on SQLSRV-PROD-01.",
                 ContentNature = ContentNature.Dynamic,
-                Status = "Active"
+                Status = "Active",
+                Tags = T("tier:identity", "kind:svc-account")
             };
             var svc_reporting = new Resource
             {
                 Id = Id_SvcAcct_Reporting,
                 Name = "svc-reporting@corp.com",
                 Type = ResourceType.ServiceAccount,
-                Description = "AD service account for the reporting service. " +
-                              "Mapped to AD\\DB-Readers group for data warehouse queries.",
-                Status = "Active"
+                Description = "AD service account for the reporting service.",
+                Status = "Active",
+                Tags = T("tier:identity", "kind:svc-account")
             };
             var svc_hrapp = new Resource
             {
@@ -307,329 +287,324 @@ namespace IdentityMap.DataModel
                 Type = ResourceType.ServiceAccount,
                 Description = "AD service account for HRPortal. " +
                               "Delegated to SQL login CORP\\svc-hrapp on SQLSRV-PROD-02.",
-                Status = "Active"
+                Status = "Active",
+                Tags = T("tier:identity", "kind:svc-account")
             };
             var svc_orders = new Resource
             {
                 Id = Id_SvcAcct_Orders,
                 Name = "svc-orders@corp.com",
                 Type = ResourceType.ServiceAccount,
-                Description = "AD service account for the order-processing microservice. " +
-                              "Delegated to native SQL login svc-orders on SQLSRV-PROD-01.",
-                Status = "Active"
+                Description = "AD service account for the order-processing microservice.",
+                Status = "Active",
+                Tags = T("tier:identity", "kind:svc-account")
             };
 
-            // ── AD Security Groups ─────────────────────────────────────────────────
+            // ── AD Security Groups
             var grp_webAppUsers = MakeGroup(Id_Grp_WebAppUsers, "AD\\WebApp-Users",
-                "Members may call CustomerPortal endpoints. Gateway for customer data.");
+                "Members may call CustomerPortal endpoints.");
             var grp_dbReaders = MakeGroup(Id_Grp_DbReaders, "AD\\DB-Readers",
-                "Direct DB read group. Mapped to SQL db-readers-role on SQLSRV-PROD-01. " +
-                "BYPASS PATH: members can query CustomerData without going through the portal.");
+                "Direct DB read group. Mapped to SQL db-readers-role. BYPASS PATH.",
+                "bypass-risk");
             var grp_dbAdmins = MakeGroup(Id_Grp_DbAdmins, "AD\\DB-Admins",
-                "DBA administrators. Can administer CustomerData and HRData databases.");
+                "DBA administrators.");
             var grp_hrPortalUsers = MakeGroup(Id_Grp_HrPortalUsers, "AD\\HRPortal-Users",
-                "Members may call HRPortal employee endpoints. No salary access.");
+                "Members may call HRPortal employee endpoints.");
             var grp_auditors = MakeGroup(Id_Grp_Auditors, "AD\\Auditors",
-                "Internal auditors. Read-only on HR employees and audit logs.");
+                "Internal auditors. Read-only on HR and audit logs.");
             var grp_dataAccess = MakeGroup(Id_Grp_DataAccess, "AD\\Data-Access",
-                "GROUP-OF-GROUPS: wraps AD\\DB-Readers. " +
-                "Effectively grants DB read to all members of child groups.");
+                "GROUP-OF-GROUPS: wraps AD\\DB-Readers transitively.",
+                "group-of-groups");
             var grp_executives = MakeGroup(Id_Grp_Executives, "AD\\Executives",
-                "Executive leadership. Can view salary data via HRPortal.");
+                "Executive leadership. Can view salary data.");
             var grp_devops = MakeGroup(Id_Grp_DevOps, "AD\\DevOps",
-                "DevOps engineers. May post orders via the order-processing endpoint.");
+                "DevOps engineers. May post orders.");
 
-            // ─────────────────────────────────────────────────────────────────────
-            // SECTION 2 — SQL INFRASTRUCTURE: SERVERS, MASTER DBs, DATABASES, TABLES, ROWS
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
+            // SECTION 2 — SQL INFRASTRUCTURE
+            // ─────────────────────────────────────────────────────────────────
 
             var sqlSrv_prod01 = new Resource
             {
                 Id = Id_SqlSrv_Prod01,
                 Name = "SQLSRV-PROD-01",
                 Type = ResourceType.VirtualMachine,
-                Description = "Primary SQL Server instance. Hosts CustomerData, Orders, CountryRef. " +
-                              "AD-integrated via Windows Authentication.",
-                Status = "Active"
+                Description = "Primary SQL Server. Hosts CustomerData, Orders, CountryRef.",
+                Status = "Active",
+                Tags = T("tier:database", "kind:sql-server", "env:prod")
             };
             var sqlSrv_prod02 = new Resource
             {
                 Id = Id_SqlSrv_Prod02,
                 Name = "SQLSRV-PROD-02",
                 Type = ResourceType.VirtualMachine,
-                Description = "Secondary SQL Server. Hosts HRData and AuditLog. " +
-                              "Stricter firewall rules — no public subnet access.",
-                Status = "Active"
+                Description = "Secondary SQL Server. Hosts HRData and AuditLog. Stricter network rules.",
+                Status = "Active",
+                Tags = T("tier:database", "kind:sql-server", "env:prod")
             };
 
-            // master databases — server-level logins and roles are hosted here
+            // Master databases — server-level logins and roles live here
             var db_master_prod01 = MakeDatabase(Id_Db_Master_Prod01, "master (PROD-01)",
-                "System database on SQLSRV-PROD-01. All server-level logins and server roles live here.",
-                SensitivityClassification.Confidential);
+                "System database on SQLSRV-PROD-01. Server logins and server roles.",
+                SensitivityClassification.Confidential,
+                "kind:database", "system-database");
             var db_master_prod02 = MakeDatabase(Id_Db_Master_Prod02, "master (PROD-02)",
-                "System database on SQLSRV-PROD-02. All server-level logins and server roles live here.",
-                SensitivityClassification.Confidential);
+                "System database on SQLSRV-PROD-02. Server logins and server roles.",
+                SensitivityClassification.Confidential,
+                "kind:database", "system-database");
 
             // User databases
             var db_customerData = MakeDatabase(Id_Db_CustomerData, "CustomerData",
-                "Customer PII database. Normalised schema: Customers, Payments, Addresses. " +
-                "Contains highly sensitive personal and financial data.",
+                "Customer PII database. Customers, Payments, Addresses.",
                 SensitivityClassification.Restricted);
             var db_orders = MakeDatabase(Id_Db_Orders, "OrdersDB",
-                "Transactional order processing database. Orders and OrderItems tables.",
+                "Transactional order processing database.",
                 SensitivityClassification.Confidential);
             var db_countryRef = MakeDatabase(Id_Db_CountryRef, "CountryRef",
-                "ISO country lookup database. Public reference data only. " +
-                "Used by CustomerPortal to resolve country_code → country_name.",
+                "ISO country lookup database. Public reference data.",
                 SensitivityClassification.None);
             var db_hrData = MakeDatabase(Id_Db_HRData, "HRData",
-                "Human resources database on SQLSRV-PROD-02. Contains employee PII and salary data. " +
-                "Highest sensitivity — segregated server.",
+                "Human resources database on SQLSRV-PROD-02. Employee PII and salary data.",
                 SensitivityClassification.TopSecret);
             var db_auditLog = MakeDatabase(Id_Db_AuditLog, "AuditLog",
-                "Centralised audit logging database. Read by auditors and SIEM. " +
-                "Tamper-evident — no UPDATE/DELETE grants issued.",
+                "Centralised audit logging database. Tamper-evident.",
                 SensitivityClassification.Restricted);
 
-            // ── Tables (DataStore) ────────────────────────────────────────────────
+            // ── Tables  — ResourceType.Table ──────────────────────────────────
             var tbl_customers = MakeTable(Id_Tbl_Customers, "dbo.Customers",
-                "Core customer table: id, name, email, phone, country_code, created_at. " +
-                "PII — name, email, phone are personal data under GDPR.",
+                "Core customer table: id, name, email, phone, country_code. PII.",
                 SensitivityClassification.Restricted);
             var tbl_payments = MakeTable(Id_Tbl_Payments, "dbo.Payments",
-                "Payment instrument table: id, customer_id, card_last4, card_token, billing_zip. " +
-                "Financial PCI-DSS data. TopSecret — only svc-webapp with explicit grant may read.",
+                "Payment instruments: card_last4, card_token, billing_zip. PCI-DSS.",
                 SensitivityClassification.TopSecret);
             var tbl_addresses = MakeTable(Id_Tbl_Addresses, "dbo.Addresses",
-                "Customer address table: id, customer_id, line1, line2, city, postcode, country_code. " +
-                "Confidential — used for shipping; disclosed only to fulfilment processes.",
+                "Customer shipping addresses.",
                 SensitivityClassification.Confidential);
             var tbl_orders = MakeTable(Id_Tbl_Orders, "dbo.Orders",
-                "Order header table: id, customer_id, placed_at, status, total_amount.",
+                "Order header: id, customer_id, status, total_amount.",
                 SensitivityClassification.Confidential);
             var tbl_orderItems = MakeTable(Id_Tbl_OrderItems, "dbo.OrderItems",
-                "Order line items: id, order_id, product_id, qty, unit_price.",
+                "Order line items: product_id, qty, unit_price.",
                 SensitivityClassification.Internal);
             var tbl_countries = MakeTable(Id_Tbl_Countries, "dbo.Countries",
-                "ISO 3166 country lookup: country_code CHAR(2), country_name NVARCHAR(100). " +
-                "Public reference data — no sensitivity.",
+                "ISO 3166 country lookup. Public data.",
                 SensitivityClassification.None);
             var tbl_employees = MakeTable(Id_Tbl_Employees, "hr.Employees",
-                "Employee master: id, name, email, job_title, department, manager_id, hire_date. " +
-                "TopSecret HR PII.",
+                "Employee master: id, name, email, job_title, department, hire_date.",
                 SensitivityClassification.TopSecret);
             var tbl_salaries = MakeTable(Id_Tbl_Salaries, "hr.Salaries",
-                "Salary records: employee_id, base_salary, bonus, effective_date. " +
-                "TopSecret — most sensitive table in the estate.",
+                "Salary records: base_salary, bonus, effective_date.",
                 SensitivityClassification.TopSecret);
             var tbl_accessLog = MakeTable(Id_Tbl_AccessLog, "audit.AccessLog",
-                "Security access events: id, principal, resource, action, timestamp, outcome. " +
-                "Restricted — auditors and SIEM only.",
+                "Security access events: principal, resource, action, outcome.",
                 SensitivityClassification.Restricted);
 
-            // ── Sensitive Rows (File — individual records with elevated sensitivity) ─
-            //    These rows demonstrate that a single record can carry higher sensitivity
-            //    than its parent table aggregate, and that this propagates upward to endpoints.
+            // ── Sensitive Rows  (individual records with elevated sensitivity)
             var row_customerSSN = new Resource
             {
                 Id = Id_Row_CustomerSSN,
                 Name = "dbo.Customers#Row:SSN_Field",
                 Type = ResourceType.File,
-                Description = "Row in dbo.Customers for a customer who provided their SSN during KYC. " +
-                              "The SSN column is populated only for this cohort. " +
-                              "Sensitivity is TopSecret — higher than the parent table (Restricted).",
+                Description = "A customer row where the SSN column is populated (KYC cohort). " +
+                              "TopSecret — higher than the parent table (Restricted).",
                 ContentAccessModel = ContentAccessModel.ResourceIsContent,
                 ContentNature = ContentNature.Static,
                 ContentSchemaDescription = "{ customer_id, ssn_encrypted, ssn_last4, kyc_date }",
                 Sensitivity = SensitivityClassification.TopSecret,
-                Status = "Active"
+                Status = "Active",
+                Tags = T("tier:database", "kind:row", "pii", "pci", "kyc")
             };
             var row_salaryRecord = new Resource
             {
                 Id = Id_Row_SalaryRecord,
                 Name = "hr.Salaries#Row:Executive",
                 Type = ResourceType.File,
-                Description = "Executive compensation record in hr.Salaries. " +
-                              "Salary + LTIP + bonus breakdown. TopSecret. " +
-                              "Only CFO (harry) and payroll admin are authorised consumers.",
+                Description = "Executive compensation row. Salary + LTIP + bonus breakdown.",
                 ContentAccessModel = ContentAccessModel.ResourceIsContent,
                 ContentNature = ContentNature.Static,
                 ContentSchemaDescription = "{ employee_id, base_salary, bonus, ltip_units, effective_date }",
                 Sensitivity = SensitivityClassification.TopSecret,
-                Status = "Active"
+                Status = "Active",
+                Tags = T("tier:database", "kind:row", "executive-compensation")
             };
 
-            // ─────────────────────────────────────────────────────────────────────
-            // SECTION 3 — SQL IAM LAYER: SERVER ROLES, SERVER LOGINS, DB ROLES, DB USERS
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
+            // SECTION 3 — SQL IAM LAYER
+            // ─────────────────────────────────────────────────────────────────
 
-            // Server Roles  (live in master DB — server-wide permission sets)
+            // Server Roles
             var srvRole_sysadmin = MakeRole(Id_SrvRole_Sysadmin, "SQL\\sysadmin",
-                "Fixed server role. Full control over the SQL Server instance. " +
-                "Assigned to: SQL\\sa (native), and implicitly to carol-dba via securityadmin chain.");
+                "Fixed server role. Full instance control.",
+                "tier:database", "kind:server-role");
             var srvRole_dbCreator = MakeRole(Id_SrvRole_DbCreator, "SQL\\dbcreator",
-                "Fixed server role. Can create, alter, and drop databases. " +
-                "Assigned to carol-dba for managed schema rollouts.");
+                "Fixed server role. Can create/drop databases.",
+                "tier:database", "kind:server-role");
             var srvRole_securityAdmin = MakeRole(Id_SrvRole_SecurityAdmin, "SQL\\securityadmin",
-                "Fixed server role. Can manage server logins and their grants. " +
-                "Assigned to carol-dba for provisioning service account logins.");
+                "Fixed server role. Can manage server logins.",
+                "tier:database", "kind:server-role");
 
-            // Server Logins  (hosted in master DB — authenticate at the server level)
+            // Server Logins
             var login_sa = new Resource
             {
                 Id = Id_Login_SA,
                 Name = "SQL\\sa",
                 Type = ResourceType.ServiceAccount,
-                Description = "Native SQL Server administrator login. Not AD-integrated. " +
-                              "Should be disabled in production — modelled here for completeness.",
-                Status = "Disabled"
+                Description = "Native SQL Server admin login. Should be disabled in production.",
+                Status = "Disabled",
+                Tags = T("tier:database", "kind:server-login", "native-sql-login", "high-privilege")
             };
             var login_webapp = new Resource
             {
                 Id = Id_Login_WebApp,
                 Name = "CORP\\svc-webapp",
                 Type = ResourceType.ServiceAccount,
-                Description = "Windows-auth SQL login for CustomerPortal. " +
-                              "Delegates from AD service account svc-webapp@corp.com. " +
-                              "Has db-users in CustomerData and OrdersDB.",
-                Status = "Active"
+                Description = "Windows-auth SQL login. Delegates from svc-webapp@corp.com.",
+                Status = "Active",
+                Tags = T("tier:database", "kind:server-login", "ad-login")
             };
             var login_reporting = new Resource
             {
                 Id = Id_Login_Reporting,
                 Name = "CORP\\DB-Readers",
                 Type = ResourceType.ServiceAccount,
-                Description = "Windows-auth SQL login mapped from AD group AD\\DB-Readers. " +
-                              "Any member of that AD group authenticates under this login. " +
-                              "Grants db_datareader on CustomerData. BYPASS PATH.",
-                Status = "Active"
+                Description = "Windows-auth group login mapped from AD\\DB-Readers. " +
+                              "All group members authenticate under this login. BYPASS PATH.",
+                Status = "Active",
+                Tags = T("tier:database", "kind:server-login", "ad-group-login", "bypass-risk")
             };
             var login_hrapp = new Resource
             {
                 Id = Id_Login_HrApp,
                 Name = "CORP\\svc-hrapp",
                 Type = ResourceType.ServiceAccount,
-                Description = "Windows-auth SQL login for HRPortal on SQLSRV-PROD-02. " +
-                              "Delegates from svc-hrapp@corp.com.",
-                Status = "Active"
+                Description = "Windows-auth SQL login for HRPortal on SQLSRV-PROD-02.",
+                Status = "Active",
+                Tags = T("tier:database", "kind:server-login", "ad-login")
             };
             var login_countryRef = new Resource
             {
                 Id = Id_Login_CountryRef,
                 Name = "SQL\\svc-countryref-ro",
                 Type = ResourceType.ServiceAccount,
-                Description = "Native SQL login. Read-only access to CountryRef.dbo.Countries only. " +
-                              "No AD mapping — password-rotated monthly by vault.",
-                Status = "Active"
+                Description = "Native SQL login. Read-only on CountryRef only. Vault-rotated.",
+                Status = "Active",
+                Tags = T("tier:database", "kind:server-login", "native-sql-login", "read-only")
             };
             var login_carolDba = new Resource
             {
                 Id = Id_Login_CarolDba,
                 Name = "CORP\\carol-adm",
                 Type = ResourceType.ServiceAccount,
-                Description = "Windows-auth SQL login for carol-adm@corp.com. " +
-                              "Has SecurityAdmin and DbCreator server roles. " +
-                              "Also mapped as db_owner in CustomerData and HRData for schema management.",
-                Status = "Active"
+                Description = "Windows-auth DBA login for carol-adm@corp.com. " +
+                              "SecurityAdmin + DbCreator server roles.",
+                Status = "Active",
+                Tags = T("tier:database", "kind:server-login", "ad-login", "high-privilege")
             };
             var login_orders = new Resource
             {
                 Id = Id_Login_Orders,
                 Name = "SQL\\svc-orders",
                 Type = ResourceType.ServiceAccount,
-                Description = "Native SQL login for the order-processing service. " +
-                              "Read/write on OrdersDB only. No access to CustomerData or HRData.",
-                Status = "Active"
+                Description = "Native SQL login for order-processing service. OrdersDB only.",
+                Status = "Active",
+                Tags = T("tier:database", "kind:server-login", "native-sql-login")
             };
 
-            // Database Roles  (scoped per database)
-            var dbRole_custDataReader = MakeRole(Id_DbRole_CustDataReader, "CustomerData\\db-readers-role",
-                "Custom DB role in CustomerData. Members inherit READ on dbo.Customers and dbo.Addresses. " +
-                "Mapped to AD\\DB-Readers via login_reporting (Windows Auth group login).");
-            var dbRole_custDataWriter = MakeRole(Id_DbRole_CustDataWriter, "CustomerData\\db-writers-role",
-                "Custom DB role in CustomerData. Members may INSERT/UPDATE dbo.Customers. " +
-                "Reserved for future batch import service — no active members yet.");
-            var dbRole_ordersReadWrite = MakeRole(Id_DbRole_OrdersReadWrite, "OrdersDB\\orders-rw-role",
-                "Custom DB role in OrdersDB. READ and WRITE on Orders and OrderItems tables.");
-            var dbRole_hrReadOnly = MakeRole(Id_DbRole_HrReadOnly, "HRData\\hr-readonly-role",
-                "Custom DB role in HRData. READ on hr.Employees only. No salary access.");
-            var dbRole_hrAdmin = MakeRole(Id_DbRole_HrAdmin, "HRData\\hr-admin-role",
-                "Custom DB role in HRData. Full READ/WRITE on hr.Employees and hr.Salaries. " +
-                "Reserved for HR system service account only.");
+            // Database Roles
+            var dbRole_custDataReader = MakeRole(Id_DbRole_CustDataReader,
+                "CustomerData\\db-readers-role",
+                "Custom DB role. SELECT on dbo.Customers + dbo.Addresses. " +
+                "Mapped from AD\\DB-Readers via group login.",
+                "tier:database", "kind:db-role");
+            var dbRole_custDataWriter = MakeRole(Id_DbRole_CustDataWriter,
+                "CustomerData\\db-writers-role",
+                "Custom DB role. INSERT/UPDATE on dbo.Customers. No active members.",
+                "tier:database", "kind:db-role");
+            var dbRole_ordersReadWrite = MakeRole(Id_DbRole_OrdersReadWrite,
+                "OrdersDB\\orders-rw-role",
+                "Custom DB role. READ and WRITE on Orders and OrderItems.",
+                "tier:database", "kind:db-role");
+            var dbRole_hrReadOnly = MakeRole(Id_DbRole_HrReadOnly,
+                "HRData\\hr-readonly-role",
+                "Custom DB role. SELECT on hr.Employees only.",
+                "tier:database", "kind:db-role");
+            var dbRole_hrAdmin = MakeRole(Id_DbRole_HrAdmin,
+                "HRData\\hr-admin-role",
+                "Custom DB role. Full READ/WRITE on Employees and Salaries.",
+                "tier:database", "kind:db-role");
 
-            // Database Users  (per-database principals, each maps to a server login)
-            var dbUser_webapp = MakeDbUser(Id_DbUser_WebApp, "CustomerData\\db_user:svc-webapp",
-                "Database user in CustomerData for CORP\\svc-webapp login. " +
-                "Has explicit GRANT on Customers(SELECT), Addresses(SELECT), Payments(SELECT).");
-            var dbUser_reporting = MakeDbUser(Id_DbUser_Reporting, "CustomerData\\db_user:DB-Readers",
-                "Database user in CustomerData for the AD group login CORP\\DB-Readers. " +
-                "Member of db-readers-role, which grants SELECT on Customers.");
-            var dbUser_hrapp = MakeDbUser(Id_DbUser_HrApp, "HRData\\db_user:svc-hrapp",
-                "Database user in HRData for CORP\\svc-hrapp login. " +
-                "Member of hr-admin-role — can read and write Employees and Salaries.");
-            var dbUser_countryRef = MakeDbUser(Id_DbUser_CountryRef, "CountryRef\\db_user:svc-countryref",
-                "Database user in CountryRef for SQL\\svc-countryref-ro. " +
-                "Single explicit GRANT: Countries(SELECT). Nothing else.");
-            var dbUser_orders = MakeDbUser(Id_DbUser_Orders, "OrdersDB\\db_user:svc-orders",
-                "Database user in OrdersDB for SQL\\svc-orders. " +
-                "Member of orders-rw-role. READ/WRITE on Orders and OrderItems.");
-            var dbUser_auditUser = MakeDbUser(Id_DbUser_AuditUser, "AuditLog\\db_user:auditors",
-                "Database user in AuditLog for the AD\\Auditors group login. " +
-                "SELECT on audit.AccessLog only. No INSERT/UPDATE/DELETE.");
+            // Database Users
+            var dbUser_webapp = MakeDbUser(Id_DbUser_WebApp,
+                "CustomerData\\db_user:svc-webapp",
+                "DB user in CustomerData for CORP\\svc-webapp. " +
+                "Explicit GRANT on Customers, Addresses, Payments (SELECT).");
+            var dbUser_reporting = MakeDbUser(Id_DbUser_Reporting,
+                "CustomerData\\db_user:DB-Readers",
+                "DB user for the AD group login CORP\\DB-Readers. Member of db-readers-role.");
+            var dbUser_hrapp = MakeDbUser(Id_DbUser_HrApp,
+                "HRData\\db_user:svc-hrapp",
+                "DB user in HRData for CORP\\svc-hrapp. Member of hr-admin-role.");
+            var dbUser_countryRef = MakeDbUser(Id_DbUser_CountryRef,
+                "CountryRef\\db_user:svc-countryref",
+                "DB user in CountryRef. Single explicit GRANT: Countries(SELECT).");
+            var dbUser_orders = MakeDbUser(Id_DbUser_Orders,
+                "OrdersDB\\db_user:svc-orders",
+                "DB user in OrdersDB for SQL\\svc-orders. Member of orders-rw-role.");
+            var dbUser_auditUser = MakeDbUser(Id_DbUser_AuditUser,
+                "AuditLog\\db_user:auditors",
+                "DB user in AuditLog. SELECT on audit.AccessLog only.");
 
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
             // SECTION 4 — WEB APPLICATIONS AND ENDPOINTS
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
 
             var webApp_customerPortal = new Resource
             {
                 Id = Id_WebApp_CustomerPortal,
                 Name = "CustomerPortal",
                 Type = ResourceType.BusinessApp,
-                Description = "Customer-facing web application. Serves customer data through REST endpoints. " +
-                              "Uses svc-webapp AD identity for all database calls.",
+                Description = "Customer-facing web application. Uses svc-webapp for DB calls.",
                 ContentAccessModel = ContentAccessModel.AccessSurface,
                 ContentNature = ContentNature.Dynamic,
-                Status = "Active"
+                Status = "Active",
+                Tags = T("tier:web", "kind:webapp", "env:prod")
             };
             var webApp_hrPortal = new Resource
             {
                 Id = Id_WebApp_HrPortal,
                 Name = "HRPortal",
                 Type = ResourceType.BusinessApp,
-                Description = "Internal HR portal. Serves employee and salary data. " +
-                              "Uses svc-hrapp AD identity. Only reachable from corporate network.",
+                Description = "Internal HR portal. Corporate network only.",
                 ContentAccessModel = ContentAccessModel.AccessSurface,
                 ContentNature = ContentNature.Dynamic,
-                Status = "Active"
+                Status = "Active",
+                Tags = T("tier:web", "kind:webapp", "env:prod", "internal-only")
             };
 
             var ep_getCustomers = MakeEndpoint(Id_Ep_GetCustomers, "GET /api/customers",
-                "Returns paginated customer list. DTO: { id, name, email, address, countryName }. " +
-                "Assembles from dbo.Customers (primary) + dbo.Addresses (secondary) + dbo.Countries (lookup).");
+                "Returns paginated customer list with country enrichment.");
             var ep_getCustomerById = MakeEndpoint(Id_Ep_GetCustomerById, "GET /api/customers/{id}",
-                "Returns single customer with full detail including payment summary. " +
-                "Joins dbo.Customers + dbo.Payments. SENSITIVE: exposes card_last4.");
+                "Returns single customer including payment summary. Exposes card_last4.");
             var ep_postOrder = MakeEndpoint(Id_Ep_PostOrder, "POST /api/orders",
-                "Creates a new order. Inserts into dbo.Orders and dbo.OrderItems transactionally. " +
-                "Write endpoint — requires both Execute and Write capabilities.");
+                "Creates an order. Inserts into Orders and OrderItems.",
+                "write-endpoint");
             var ep_getEmployees = MakeEndpoint(Id_Ep_GetEmployees, "GET /api/hr/employees",
-                "Returns employee directory: name, title, department, manager. " +
-                "No salary data. Accessible to HR portal users and auditors.");
+                "Employee directory — no salary data.");
             var ep_getSalaries = MakeEndpoint(Id_Ep_GetSalaries, "GET /api/hr/salaries",
-                "Returns salary report. TopSecret — restricted to executives and payroll admin.");
+                "Salary report. TopSecret — executives only.",
+                "restricted-endpoint");
 
-            // Register all resources in context
+            // ── Register all resources ─────────────────────────────────────────
             ctx.Resources.AddRange(new[]
             {
-                // AD and identity
+                // Identity
                 ad,
                 alice, bob, carol, dave, eve, frank, grace, harry, ivan, judy,
                 alice_adm, carol_adm, dave_adm,
                 svc_webapp, svc_reporting, svc_hrapp, svc_orders,
                 grp_webAppUsers, grp_dbReaders, grp_dbAdmins, grp_hrPortalUsers,
                 grp_auditors, grp_dataAccess, grp_executives, grp_devops,
-
+ 
                 // SQL infrastructure
                 sqlSrv_prod01, sqlSrv_prod02,
                 db_master_prod01, db_master_prod02,
@@ -638,7 +613,7 @@ namespace IdentityMap.DataModel
                 tbl_orders, tbl_orderItems, tbl_countries,
                 tbl_employees, tbl_salaries, tbl_accessLog,
                 row_customerSSN, row_salaryRecord,
-
+ 
                 // SQL IAM
                 srvRole_sysadmin, srvRole_dbCreator, srvRole_securityAdmin,
                 login_sa, login_webapp, login_reporting, login_hrapp,
@@ -647,52 +622,53 @@ namespace IdentityMap.DataModel
                 dbRole_hrReadOnly, dbRole_hrAdmin,
                 dbUser_webapp, dbUser_reporting, dbUser_hrapp,
                 dbUser_countryRef, dbUser_orders, dbUser_auditUser,
-
+ 
                 // Web tier
                 webApp_customerPortal, webApp_hrPortal,
                 ep_getCustomers, ep_getCustomerById, ep_postOrder,
                 ep_getEmployees, ep_getSalaries
             });
 
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
             // SECTION 5 — STRUCTURAL RELATIONSHIPS
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
 
             ctx.Relationships.AddRange(new[]
             {
                 // AD hosts all identities
-                Rel(Id_AD, Id_Alice,              RelationshipType.HostedIn, "alice@corp.com lives in corp.AD"),
-                Rel(Id_AD, Id_Bob,                RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Carol,              RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Dave,               RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Eve,                RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Frank,              RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Grace,              RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Harry,              RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Ivan,               RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Judy,               RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Alice_Adm,          RelationshipType.HostedIn, "alice-adm@ is a secondary AD account for alice@"),
-                Rel(Id_AD, Id_Carol_Adm,          RelationshipType.HostedIn, "carol-adm@ is the DBA elevated account for carol@"),
-                Rel(Id_AD, Id_Dave_Adm,           RelationshipType.HostedIn),
-                Rel(Id_AD, Id_SvcAcct_WebApp,     RelationshipType.HostedIn),
-                Rel(Id_AD, Id_SvcAcct_Reporting,  RelationshipType.HostedIn),
-                Rel(Id_AD, Id_SvcAcct_HrApp,      RelationshipType.HostedIn),
-                Rel(Id_AD, Id_SvcAcct_Orders,     RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Grp_WebAppUsers,    RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Grp_DbReaders,      RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Grp_DbAdmins,       RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Grp_HrPortalUsers,  RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Grp_Auditors,       RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Grp_DataAccess,     RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Grp_Executives,     RelationshipType.HostedIn),
-                Rel(Id_AD, Id_Grp_DevOps,         RelationshipType.HostedIn),
-
-                // SQLSRV-PROD-01 hosts its master DB, user DBs, server-level objects
-                Rel(Id_SqlSrv_Prod01, Id_Db_Master_Prod01, RelationshipType.HostedIn, "master DB on PROD-01"),
+                Rel(Id_AD, Id_Alice,             RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Bob,               RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Carol,             RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Dave,              RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Eve,               RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Frank,             RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Grace,             RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Harry,             RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Ivan,              RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Judy,              RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Alice_Adm,         RelationshipType.HostedIn,
+                    "alice-adm@ secondary account for alice@"),
+                Rel(Id_AD, Id_Carol_Adm,         RelationshipType.HostedIn,
+                    "carol-adm@ elevated account for carol@"),
+                Rel(Id_AD, Id_Dave_Adm,          RelationshipType.HostedIn),
+                Rel(Id_AD, Id_SvcAcct_WebApp,    RelationshipType.HostedIn),
+                Rel(Id_AD, Id_SvcAcct_Reporting, RelationshipType.HostedIn),
+                Rel(Id_AD, Id_SvcAcct_HrApp,     RelationshipType.HostedIn),
+                Rel(Id_AD, Id_SvcAcct_Orders,    RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Grp_WebAppUsers,   RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Grp_DbReaders,     RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Grp_DbAdmins,      RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Grp_HrPortalUsers, RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Grp_Auditors,      RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Grp_DataAccess,    RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Grp_Executives,    RelationshipType.HostedIn),
+                Rel(Id_AD, Id_Grp_DevOps,        RelationshipType.HostedIn),
+ 
+                // SQLSRV-PROD-01 → master DB → logins, server roles
+                Rel(Id_SqlSrv_Prod01, Id_Db_Master_Prod01, RelationshipType.HostedIn),
                 Rel(Id_SqlSrv_Prod01, Id_Db_CustomerData,  RelationshipType.HostedIn),
                 Rel(Id_SqlSrv_Prod01, Id_Db_Orders,        RelationshipType.HostedIn),
                 Rel(Id_SqlSrv_Prod01, Id_Db_CountryRef,    RelationshipType.HostedIn),
-                // Server roles and logins live in master DB
                 Rel(Id_Db_Master_Prod01, Id_SrvRole_Sysadmin,      RelationshipType.HostedIn),
                 Rel(Id_Db_Master_Prod01, Id_SrvRole_DbCreator,     RelationshipType.HostedIn),
                 Rel(Id_Db_Master_Prod01, Id_SrvRole_SecurityAdmin, RelationshipType.HostedIn),
@@ -702,14 +678,14 @@ namespace IdentityMap.DataModel
                 Rel(Id_Db_Master_Prod01, Id_Login_CountryRef,      RelationshipType.HostedIn),
                 Rel(Id_Db_Master_Prod01, Id_Login_CarolDba,        RelationshipType.HostedIn),
                 Rel(Id_Db_Master_Prod01, Id_Login_Orders,          RelationshipType.HostedIn),
-
-                // SQLSRV-PROD-02 hosts its master DB and HR databases
-                Rel(Id_SqlSrv_Prod02, Id_Db_Master_Prod02, RelationshipType.HostedIn, "master DB on PROD-02"),
+ 
+                // SQLSRV-PROD-02 → master DB → hrapp login
+                Rel(Id_SqlSrv_Prod02, Id_Db_Master_Prod02, RelationshipType.HostedIn),
                 Rel(Id_SqlSrv_Prod02, Id_Db_HRData,        RelationshipType.HostedIn),
                 Rel(Id_SqlSrv_Prod02, Id_Db_AuditLog,      RelationshipType.HostedIn),
                 Rel(Id_Db_Master_Prod02, Id_Login_HrApp,   RelationshipType.HostedIn),
-
-                // Tables are hosted in their parent databases
+ 
+                // Tables inside their databases
                 Rel(Id_Db_CustomerData, Id_Tbl_Customers,  RelationshipType.HostedIn),
                 Rel(Id_Db_CustomerData, Id_Tbl_Payments,   RelationshipType.HostedIn),
                 Rel(Id_Db_CustomerData, Id_Tbl_Addresses,  RelationshipType.HostedIn),
@@ -719,108 +695,107 @@ namespace IdentityMap.DataModel
                 Rel(Id_Db_HRData,       Id_Tbl_Employees,  RelationshipType.HostedIn),
                 Rel(Id_Db_HRData,       Id_Tbl_Salaries,   RelationshipType.HostedIn),
                 Rel(Id_Db_AuditLog,     Id_Tbl_AccessLog,  RelationshipType.HostedIn),
-
-                // Database roles live in their database
+ 
+                // Database roles inside their database
                 Rel(Id_Db_CustomerData, Id_DbRole_CustDataReader,  RelationshipType.HostedIn),
                 Rel(Id_Db_CustomerData, Id_DbRole_CustDataWriter,  RelationshipType.HostedIn),
                 Rel(Id_Db_Orders,       Id_DbRole_OrdersReadWrite, RelationshipType.HostedIn),
                 Rel(Id_Db_HRData,       Id_DbRole_HrReadOnly,      RelationshipType.HostedIn),
                 Rel(Id_Db_HRData,       Id_DbRole_HrAdmin,         RelationshipType.HostedIn),
-
-                // Database users live in their database and depend on their login
+ 
+                // Database users inside their database
                 Rel(Id_Db_CustomerData, Id_DbUser_WebApp,     RelationshipType.HostedIn),
                 Rel(Id_Db_CustomerData, Id_DbUser_Reporting,  RelationshipType.HostedIn),
                 Rel(Id_Db_HRData,       Id_DbUser_HrApp,      RelationshipType.HostedIn),
                 Rel(Id_Db_CountryRef,   Id_DbUser_CountryRef, RelationshipType.HostedIn),
                 Rel(Id_Db_Orders,       Id_DbUser_Orders,     RelationshipType.HostedIn),
                 Rel(Id_Db_AuditLog,     Id_DbUser_AuditUser,  RelationshipType.HostedIn),
-
-                // DB users depend on (are backed by) their server login
-                Rel(Id_DbUser_WebApp,     Id_Login_WebApp,     RelationshipType.DependsOn, "CustomerData\\svc-webapp user ← CORP\\svc-webapp login"),
-                Rel(Id_DbUser_Reporting,  Id_Login_Reporting,  RelationshipType.DependsOn, "CustomerData\\DB-Readers user ← CORP\\DB-Readers login"),
+ 
+                // DB users depend on their server login
+                Rel(Id_DbUser_WebApp,     Id_Login_WebApp,     RelationshipType.DependsOn,
+                    "CustomerData\\svc-webapp user ← CORP\\svc-webapp login"),
+                Rel(Id_DbUser_Reporting,  Id_Login_Reporting,  RelationshipType.DependsOn,
+                    "CustomerData\\DB-Readers user ← CORP\\DB-Readers group login"),
                 Rel(Id_DbUser_HrApp,      Id_Login_HrApp,      RelationshipType.DependsOn),
                 Rel(Id_DbUser_CountryRef, Id_Login_CountryRef, RelationshipType.DependsOn),
                 Rel(Id_DbUser_Orders,     Id_Login_Orders,     RelationshipType.DependsOn),
-
-                // Endpoints are hosted in their web application
+ 
+                // Endpoints inside their web app
                 Rel(Id_WebApp_CustomerPortal, Id_Ep_GetCustomers,    RelationshipType.HostedIn),
                 Rel(Id_WebApp_CustomerPortal, Id_Ep_GetCustomerById, RelationshipType.HostedIn),
                 Rel(Id_WebApp_CustomerPortal, Id_Ep_PostOrder,       RelationshipType.HostedIn),
                 Rel(Id_WebApp_HrPortal,       Id_Ep_GetEmployees,    RelationshipType.HostedIn),
                 Rel(Id_WebApp_HrPortal,       Id_Ep_GetSalaries,     RelationshipType.HostedIn),
-
-                // Web apps use AD service accounts as their runtime identity
-                Rel(Id_WebApp_CustomerPortal, Id_SvcAcct_WebApp,  RelationshipType.UsesIdentity,
-                    "CustomerPortal authenticates to SQL as svc-webapp@corp.com (Windows Auth)"),
-                Rel(Id_WebApp_HrPortal,       Id_SvcAcct_HrApp,   RelationshipType.UsesIdentity,
-                    "HRPortal authenticates to SQL as svc-hrapp@corp.com (Windows Auth)"),
-
-                // SQL logins that are AD-integrated also use the AD service account identity
-                Rel(Id_Login_WebApp,    Id_SvcAcct_WebApp,    RelationshipType.UsesIdentity,
-                    "CORP\\svc-webapp SQL login delegates from svc-webapp@corp.com AD identity"),
-                Rel(Id_Login_Reporting, Id_Grp_DbReaders,     RelationshipType.UsesIdentity,
-                    "CORP\\DB-Readers SQL login delegates from AD\\DB-Readers group — all members authenticate under this login"),
-                Rel(Id_Login_HrApp,     Id_SvcAcct_HrApp,     RelationshipType.UsesIdentity),
-                Rel(Id_Login_CarolDba,  Id_Carol_Adm,         RelationshipType.UsesIdentity,
-                    "CORP\\carol-adm SQL login delegates from carol-adm@corp.com elevated AD account")
+ 
+                // Web apps use AD service accounts
+                Rel(Id_WebApp_CustomerPortal, Id_SvcAcct_WebApp, RelationshipType.UsesIdentity,
+                    "CustomerPortal authenticates to SQL as svc-webapp@corp.com"),
+                Rel(Id_WebApp_HrPortal,       Id_SvcAcct_HrApp,  RelationshipType.UsesIdentity,
+                    "HRPortal authenticates to SQL as svc-hrapp@corp.com"),
+ 
+                // SQL logins use AD identities
+                Rel(Id_Login_WebApp,    Id_SvcAcct_WebApp,  RelationshipType.UsesIdentity,
+                    "CORP\\svc-webapp login delegates from svc-webapp@corp.com"),
+                Rel(Id_Login_Reporting, Id_Grp_DbReaders,   RelationshipType.UsesIdentity,
+                    "CORP\\DB-Readers group login delegates from AD\\DB-Readers"),
+                Rel(Id_Login_HrApp,     Id_SvcAcct_HrApp,   RelationshipType.UsesIdentity),
+                Rel(Id_Login_CarolDba,  Id_Carol_Adm,       RelationshipType.UsesIdentity,
+                    "CORP\\carol-adm login delegates from carol-adm@corp.com")
             });
 
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
             // SECTION 6 — GROUP MEMBERSHIPS
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
 
             ctx.Memberships.AddRange(new[]
             {
-                // AD\WebApp-Users  → alice, frank, grace, bob can call CustomerPortal
+                // AD\WebApp-Users
                 Membership(Id_Grp_WebAppUsers, Id_Alice, "Member"),
                 Membership(Id_Grp_WebAppUsers, Id_Frank, "Member"),
                 Membership(Id_Grp_WebAppUsers, Id_Grace, "Member"),
                 Membership(Id_Grp_WebAppUsers, Id_Bob,   "Member"),
-
-                // AD\DB-Readers  → bob, grace, judy have direct DB read (BYPASS PATH)
+ 
+                // AD\DB-Readers — BYPASS PATH
                 Membership(Id_Grp_DbReaders, Id_Bob,   "Member"),
                 Membership(Id_Grp_DbReaders, Id_Grace, "Member"),
                 Membership(Id_Grp_DbReaders, Id_Judy,  "Member"),
-
-                // AD\DB-Admins  → carol-adm, dave-adm can administer databases
+ 
+                // AD\DB-Admins
                 Membership(Id_Grp_DbAdmins, Id_Carol_Adm, "Member"),
                 Membership(Id_Grp_DbAdmins, Id_Dave_Adm,  "Member"),
-
-                // AD\HRPortal-Users → carol, dave can access employee directory
+ 
+                // AD\HRPortal-Users
                 Membership(Id_Grp_HrPortalUsers, Id_Carol, "Member"),
                 Membership(Id_Grp_HrPortalUsers, Id_Dave,  "Member"),
-
-                // AD\Auditors → judy, eve audit HR data and logs
+ 
+                // AD\Auditors
                 Membership(Id_Grp_Auditors, Id_Judy, "Member"),
                 Membership(Id_Grp_Auditors, Id_Eve,  "Member"),
-
-                // AD\Executives → harry can view salary report
+ 
+                // AD\Executives
                 Membership(Id_Grp_Executives, Id_Harry, "Member"),
-
-                // AD\DevOps → ivan can post orders
+ 
+                // AD\DevOps
                 Membership(Id_Grp_DevOps, Id_Ivan, "Member"),
-
-                // ── GROUP-OF-GROUPS ────────────────────────────────────────────────
-                // AD\Data-Access contains AD\DB-Readers as a child group.
-                // Any member of AD\DB-Readers is transitively a member of AD\Data-Access.
-                // The AccessGraphResolver Rule 5 resolves this recursively.
+ 
+                // GROUP-OF-GROUPS: Data-Access contains DB-Readers
                 Membership(Id_Grp_DataAccess, Id_Grp_DbReaders, "Member"),
-
-                // DB role memberships  (who belongs to which database role)
+ 
+                // DB role memberships
                 Membership(Id_DbRole_CustDataReader,  Id_DbUser_Reporting, "Member"),
                 Membership(Id_DbRole_OrdersReadWrite, Id_DbUser_Orders,    "Member"),
                 Membership(Id_DbRole_HrAdmin,         Id_DbUser_HrApp,     "Member"),
                 Membership(Id_DbRole_HrReadOnly,      Id_DbUser_AuditUser, "Member"),
-
+ 
                 // Server role memberships
                 Membership(Id_SrvRole_Sysadmin,      Id_Login_SA,       "Member"),
                 Membership(Id_SrvRole_SecurityAdmin, Id_Login_CarolDba, "Member"),
                 Membership(Id_SrvRole_DbCreator,     Id_Login_CarolDba, "Member")
             });
 
-            // ─────────────────────────────────────────────────────────────────────
-            // SECTION 7 — ATTRIBUTE DEFINITIONS AND VALUES  (cross-system linkages)
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
+            // SECTION 7 — ATTRIBUTE DEFINITIONS AND VALUES
+            // ─────────────────────────────────────────────────────────────────
 
             var attrDef_linkedAdIdentity = new ResourceAttributeDefinition
             {
@@ -829,7 +804,7 @@ namespace IdentityMap.DataModel
                 Label = "Linked AD Identity",
                 DataType = AttributeDataType.ResourceReference,
                 AllowedReferenceType = ResourceType.ServiceAccount,
-                HelpText = "The AD ServiceAccount that this SQL login delegates from.",
+                HelpText = "The AD ServiceAccount this SQL login delegates from.",
                 IsRequired = false
             };
             var attrDef_linkedAdGroup = new ResourceAttributeDefinition
@@ -849,7 +824,7 @@ namespace IdentityMap.DataModel
                 Label = "Linked Database User",
                 DataType = AttributeDataType.ResourceReference,
                 AllowedReferenceType = ResourceType.Account,
-                HelpText = "The database-scoped user resource that corresponds to this server login.",
+                HelpText = "The database-scoped user that corresponds to this server login.",
                 IsRequired = false
             };
             var attrDef_parentTable = new ResourceAttributeDefinition
@@ -858,9 +833,9 @@ namespace IdentityMap.DataModel
                 Key = "parent_table",
                 Label = "Parent Table",
                 DataType = AttributeDataType.ResourceReference,
-                AllowedReferenceType = ResourceType.DataStore,
-                HelpText = "For row-level resources: the DataStore (table) that contains this row. " +
-                           "Used by the traversal engine to bubble row sensitivity up to the table.",
+                AllowedReferenceType = ResourceType.Table,
+                HelpText = "For row resources: the Table that contains this row. " +
+                             "Used by the traversal engine to bubble sensitivity upward.",
                 IsRequired = false
             };
 
@@ -870,251 +845,176 @@ namespace IdentityMap.DataModel
                 attrDef_linkedDbUser, attrDef_parentTable
             });
 
-            // Attribute Values  (actual cross-system links)
-
-            // SQL login ← AD service account
+            // Cross-system attribute values
             AddAttrValue(ctx, Id_Login_WebApp, AttrDef_LinkedAdIdentity, Id_SvcAcct_WebApp.ToString(), attrDef_linkedAdIdentity);
             AddAttrValue(ctx, Id_Login_HrApp, AttrDef_LinkedAdIdentity, Id_SvcAcct_HrApp.ToString(), attrDef_linkedAdIdentity);
             AddAttrValue(ctx, Id_Login_CarolDba, AttrDef_LinkedAdIdentity, Id_Carol_Adm.ToString(), attrDef_linkedAdIdentity);
-
-            // SQL login (group login) ← AD group
             AddAttrValue(ctx, Id_Login_Reporting, AttrDef_LinkedAdGroup, Id_Grp_DbReaders.ToString(), attrDef_linkedAdGroup);
-
-            // DB roles that map to AD groups
             AddAttrValue(ctx, Id_DbRole_CustDataReader, AttrDef_LinkedAdGroup, Id_Grp_DbReaders.ToString(), attrDef_linkedAdGroup);
-
-            // Row → parent table (enables row-level sensitivity to bubble to table)
             AddAttrValue(ctx, Id_Row_CustomerSSN, AttrDef_ParentTable, Id_Tbl_Customers.ToString(), attrDef_parentTable);
             AddAttrValue(ctx, Id_Row_SalaryRecord, AttrDef_ParentTable, Id_Tbl_Salaries.ToString(), attrDef_parentTable);
 
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
             // SECTION 8 — CAPABILITIES
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
 
-            // ── Endpoint capabilities ──────────────────────────────────────────────
+            // Endpoint capabilities
             ctx.Capabilities.AddRange(new[]
             {
                 MakeCap(Cap_Ep_GetCustomers_Exec,    Id_Ep_GetCustomers,    CapabilityType.Execute, CapabilityScope.ContentAccess,
-                    "Invoke GET /api/customers. Returns customer list with country enrichment."),
+                    "Invoke GET /api/customers."),
                 MakeCap(Cap_Ep_GetCustomerById_Exec, Id_Ep_GetCustomerById, CapabilityType.Execute, CapabilityScope.ContentAccess,
-                    "Invoke GET /api/customers/{id}. Returns customer detail including payment summary."),
+                    "Invoke GET /api/customers/{id} — includes payment summary."),
                 MakeCap(Cap_Ep_PostOrder_Exec,       Id_Ep_PostOrder,       CapabilityType.Execute, CapabilityScope.ContentAccess,
-                    "Invoke POST /api/orders to create an order. Requires Write capability too."),
-                // POST /api/orders also needs an explicit Write capability because it modifies data
-                MakeCap(Cap_Ep_PostOrder_Write,      Id_Ep_PostOrder,       CapabilityType.Write, CapabilityScope.ContentAccess,
-                    "POST /api/orders write path. Inserts into Orders and OrderItems."),
+                    "Invoke POST /api/orders."),
+                MakeCap(Cap_Ep_PostOrder_Write,      Id_Ep_PostOrder,       CapabilityType.Write,   CapabilityScope.ContentAccess,
+                    "POST /api/orders write path — inserts into Orders and OrderItems."),
                 MakeCap(Cap_Ep_GetEmployees_Exec,    Id_Ep_GetEmployees,    CapabilityType.Execute, CapabilityScope.ContentAccess,
-                    "Invoke GET /api/hr/employees. Returns employee directory (no salary)."),
+                    "Invoke GET /api/hr/employees."),
                 MakeCap(Cap_Ep_GetSalaries_Exec,     Id_Ep_GetSalaries,     CapabilityType.Execute, CapabilityScope.ContentAccess,
-                    "Invoke GET /api/hr/salaries. Returns salary report. TopSecret — exec-only.")
+                    "Invoke GET /api/hr/salaries. TopSecret — exec only.")
             });
 
-            // ── Table-level capabilities  (granular SQL IAM) ───────────────────────
+            // Table-level capabilities
             ctx.Capabilities.AddRange(new[]
             {
-                // dbo.Customers
-                MakeCap(Cap_Tbl_Customers_Read,   Id_Tbl_Customers, CapabilityType.Read,   CapabilityScope.ContentAccess,
-                    "SELECT on dbo.Customers. Requires DBA approval."),
-                MakeCap(Cap_Tbl_Customers_Write,  Id_Tbl_Customers, CapabilityType.Write,  CapabilityScope.ContentAccess,
-                    "INSERT/UPDATE on dbo.Customers. Restricted to batch import role."),
-                MakeCap(Cap_Tbl_Customers_Delete, Id_Tbl_Customers, CapabilityType.Delete, CapabilityScope.ContentAccess,
-                    "DELETE on dbo.Customers. DBA-only for GDPR erasure workflows."),
-
-                // dbo.Payments
-                MakeCap(Cap_Tbl_Payments_Read,    Id_Tbl_Payments,  CapabilityType.Read,   CapabilityScope.ContentAccess,
-                    "SELECT on dbo.Payments. PCI-DSS restricted. Explicit grant required per principal."),
-
-                // dbo.Addresses
-                MakeCap(Cap_Tbl_Addresses_Read,   Id_Tbl_Addresses, CapabilityType.Read,   CapabilityScope.ContentAccess,
-                    "SELECT on dbo.Addresses."),
-                MakeCap(Cap_Tbl_Addresses_Write,  Id_Tbl_Addresses, CapabilityType.Write,  CapabilityScope.ContentAccess,
-                    "INSERT/UPDATE on dbo.Addresses. Fulfilment service only."),
-
-                // dbo.Orders / dbo.OrderItems
-                MakeCap(Cap_Tbl_Orders_Read,      Id_Tbl_Orders,     CapabilityType.Read,  CapabilityScope.ContentAccess,
-                    "SELECT on dbo.Orders."),
-                MakeCap(Cap_Tbl_Orders_Write,     Id_Tbl_Orders,     CapabilityType.Write, CapabilityScope.ContentAccess,
-                    "INSERT/UPDATE on dbo.Orders. Order-processing service only."),
-                MakeCap(Cap_Tbl_OrderItems_Read,  Id_Tbl_OrderItems, CapabilityType.Read,  CapabilityScope.ContentAccess,
-                    "SELECT on dbo.OrderItems."),
-                MakeCap(Cap_Tbl_OrderItems_Write, Id_Tbl_OrderItems, CapabilityType.Write, CapabilityScope.ContentAccess,
-                    "INSERT/UPDATE on dbo.OrderItems."),
-
-                // dbo.Countries
-                MakeCap(Cap_Tbl_Countries_Read,   Id_Tbl_Countries, CapabilityType.Read,   CapabilityScope.ContentAccess,
-                    "SELECT on dbo.Countries. Public reference data."),
-
-                // hr.Employees / hr.Salaries
-                MakeCap(Cap_Tbl_Employees_Read,   Id_Tbl_Employees, CapabilityType.Read,   CapabilityScope.ContentAccess,
-                    "SELECT on hr.Employees."),
-                MakeCap(Cap_Tbl_Employees_Write,  Id_Tbl_Employees, CapabilityType.Write,  CapabilityScope.ContentAccess,
-                    "INSERT/UPDATE on hr.Employees. HR admin only."),
-                MakeCap(Cap_Tbl_Salaries_Read,    Id_Tbl_Salaries,  CapabilityType.Read,   CapabilityScope.ContentAccess,
-                    "SELECT on hr.Salaries. TopSecret — hr-admin-role only."),
-
-                // audit.AccessLog
-                MakeCap(Cap_Tbl_AccessLog_Read,   Id_Tbl_AccessLog, CapabilityType.Read,   CapabilityScope.ContentAccess,
-                    "SELECT on audit.AccessLog. Auditors and SIEM."),
-                MakeCap(Cap_Tbl_AccessLog_Write,  Id_Tbl_AccessLog, CapabilityType.Write,  CapabilityScope.ContentAccess,
-                    "INSERT on audit.AccessLog. SIEM writer account only — no human grant.")
+                MakeCap(Cap_Tbl_Customers_Read,   Id_Tbl_Customers, CapabilityType.Read,   CapabilityScope.ContentAccess, "SELECT on dbo.Customers."),
+                MakeCap(Cap_Tbl_Customers_Write,  Id_Tbl_Customers, CapabilityType.Write,  CapabilityScope.ContentAccess, "INSERT/UPDATE on dbo.Customers."),
+                MakeCap(Cap_Tbl_Customers_Delete, Id_Tbl_Customers, CapabilityType.Delete, CapabilityScope.ContentAccess, "DELETE on dbo.Customers. GDPR erasure only."),
+                MakeCap(Cap_Tbl_Payments_Read,    Id_Tbl_Payments,  CapabilityType.Read,   CapabilityScope.ContentAccess, "SELECT on dbo.Payments. PCI-DSS."),
+                MakeCap(Cap_Tbl_Addresses_Read,   Id_Tbl_Addresses, CapabilityType.Read,   CapabilityScope.ContentAccess, "SELECT on dbo.Addresses."),
+                MakeCap(Cap_Tbl_Addresses_Write,  Id_Tbl_Addresses, CapabilityType.Write,  CapabilityScope.ContentAccess, "INSERT/UPDATE on dbo.Addresses."),
+                MakeCap(Cap_Tbl_Orders_Read,      Id_Tbl_Orders,    CapabilityType.Read,   CapabilityScope.ContentAccess, "SELECT on dbo.Orders."),
+                MakeCap(Cap_Tbl_Orders_Write,     Id_Tbl_Orders,    CapabilityType.Write,  CapabilityScope.ContentAccess, "INSERT/UPDATE on dbo.Orders."),
+                MakeCap(Cap_Tbl_OrderItems_Read,  Id_Tbl_OrderItems,CapabilityType.Read,   CapabilityScope.ContentAccess, "SELECT on dbo.OrderItems."),
+                MakeCap(Cap_Tbl_OrderItems_Write, Id_Tbl_OrderItems,CapabilityType.Write,  CapabilityScope.ContentAccess, "INSERT/UPDATE on dbo.OrderItems."),
+                MakeCap(Cap_Tbl_Countries_Read,   Id_Tbl_Countries, CapabilityType.Read,   CapabilityScope.ContentAccess, "SELECT on dbo.Countries. Public."),
+                MakeCap(Cap_Tbl_Employees_Read,   Id_Tbl_Employees, CapabilityType.Read,   CapabilityScope.ContentAccess, "SELECT on hr.Employees."),
+                MakeCap(Cap_Tbl_Employees_Write,  Id_Tbl_Employees, CapabilityType.Write,  CapabilityScope.ContentAccess, "INSERT/UPDATE on hr.Employees."),
+                MakeCap(Cap_Tbl_Salaries_Read,    Id_Tbl_Salaries,  CapabilityType.Read,   CapabilityScope.ContentAccess, "SELECT on hr.Salaries. TopSecret."),
+                MakeCap(Cap_Tbl_AccessLog_Read,   Id_Tbl_AccessLog, CapabilityType.Read,   CapabilityScope.ContentAccess, "SELECT on audit.AccessLog."),
+                MakeCap(Cap_Tbl_AccessLog_Write,  Id_Tbl_AccessLog, CapabilityType.Write,  CapabilityScope.ContentAccess, "INSERT on audit.AccessLog. SIEM only.")
             });
 
-            // ── Database and server-level administrative capabilities ───────────────
+            // Admin capabilities
             ctx.Capabilities.AddRange(new[]
             {
-                MakeCap(Cap_Db_CustomerData_Administer, Id_Db_CustomerData, CapabilityType.Administer, CapabilityScope.SelfManagement,
-                    "DBA-level administration of CustomerData: schema changes, index builds, backup."),
-                MakeCap(Cap_Db_HRData_Administer,       Id_Db_HRData,       CapabilityType.Administer, CapabilityScope.SelfManagement,
-                    "DBA-level administration of HRData."),
-                MakeCap(Cap_SrvRole_Sysadmin_Administer, Id_SrvRole_Sysadmin, CapabilityType.Administer, CapabilityScope.SelfManagement,
-                    "Full server administration via sysadmin role membership.")
+                MakeCap(Cap_Db_CustomerData_Administer,  Id_Db_CustomerData,   CapabilityType.Administer, CapabilityScope.SelfManagement, "DBA admin of CustomerData."),
+                MakeCap(Cap_Db_HRData_Administer,        Id_Db_HRData,         CapabilityType.Administer, CapabilityScope.SelfManagement, "DBA admin of HRData."),
+                MakeCap(Cap_SrvRole_Sysadmin_Administer, Id_SrvRole_Sysadmin,  CapabilityType.Administer, CapabilityScope.SelfManagement, "Full server admin via sysadmin role.")
             });
 
-            // ─────────────────────────────────────────────────────────────────────
-            // SECTION 9 — CAPABILITY GRANTS  (active entitlements)
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
+            // SECTION 9 — CAPABILITY GRANTS
+            // ─────────────────────────────────────────────────────────────────
 
-            // ── Endpoint grants  (AD groups → endpoint capabilities) ──────────────
+            // Endpoint grants
             ctx.Grants.AddRange(new[]
             {
-                // AD\WebApp-Users → GET /api/customers and GET /api/customers/{id}
                 MakeGrant(Grant_WebAppUsers_GetCustomers,    Cap_Ep_GetCustomers_Exec,    Id_Grp_WebAppUsers,
-                    "WebApp-Users AD group is the authorised consumer of the customer list endpoint.",
+                    "WebApp-Users AD group — authorised consumer of the customer list endpoint.",
                     new DateTime(2024, 1, 15, 0, 0, 0, DateTimeKind.Utc)),
                 MakeGrant(Grant_WebAppUsers_GetCustomerById, Cap_Ep_GetCustomerById_Exec, Id_Grp_WebAppUsers,
-                    "WebApp-Users can retrieve individual customer records including payment summary.",
+                    "WebApp-Users can retrieve individual customer detail.",
                     new DateTime(2024, 1, 15, 0, 0, 0, DateTimeKind.Utc)),
-
-                // AD\DevOps → POST /api/orders  (both Execute and Write required)
-                MakeGrant(Grant_DevOps_PostOrder, Cap_Ep_PostOrder_Exec, Id_Grp_DevOps,
-                    "DevOps team manages order ingestion pipeline via this endpoint.",
+                MakeGrant(Grant_DevOps_PostOrder,            Cap_Ep_PostOrder_Exec,       Id_Grp_DevOps,
+                    "DevOps team manages order ingestion pipeline.",
                     new DateTime(2024, 3, 1, 0, 0, 0, DateTimeKind.Utc)),
-
-                // AD\HRPortal-Users → GET /api/hr/employees
-                MakeGrant(Grant_HrPortalUsers_GetEmployees, Cap_Ep_GetEmployees_Exec, Id_Grp_HrPortalUsers,
+                MakeGrant(Grant_HrPortalUsers_GetEmployees,  Cap_Ep_GetEmployees_Exec,    Id_Grp_HrPortalUsers,
                     "HR portal users access the employee directory.",
                     new DateTime(2024, 2, 1, 0, 0, 0, DateTimeKind.Utc)),
-
-                // AD\Auditors → GET /api/hr/employees  (read-only audit access)
-                MakeGrant(Grant_Auditors_GetEmployees, Cap_Ep_GetEmployees_Exec, Id_Grp_Auditors,
-                    "Auditors need employee list for compliance cross-checks.",
+                MakeGrant(Grant_Auditors_GetEmployees,       Cap_Ep_GetEmployees_Exec,    Id_Grp_Auditors,
+                    "Auditors need the employee list for compliance cross-checks.",
                     new DateTime(2024, 2, 1, 0, 0, 0, DateTimeKind.Utc)),
-
-                // AD\Executives → GET /api/hr/salaries  (restricted to exec leadership)
-                MakeGrant(Grant_Executives_GetSalaries, Cap_Ep_GetSalaries_Exec, Id_Grp_Executives,
-                    "Executive leadership requires salary visibility for compensation review.",
+                MakeGrant(Grant_Executives_GetSalaries,      Cap_Ep_GetSalaries_Exec,     Id_Grp_Executives,
+                    "Executive leadership requires salary visibility.",
                     new DateTime(2024, 4, 1, 0, 0, 0, DateTimeKind.Utc))
             });
 
-            // ── Table-level grants  (database users/roles → table capabilities) ───
+            // Table-level grants
             ctx.Grants.AddRange(new[]
             {
-                // CustomerData: svc-webapp db user  → Customers(SELECT), Addresses(SELECT), Payments(SELECT)
-                MakeGrant(Grant_DbUser_WebApp_Cust_Read,  Cap_Tbl_Customers_Read,  Id_DbUser_WebApp,
-                    "svc-webapp db user requires SELECT on Customers to serve customer list endpoint.",
+                MakeGrant(Grant_DbUser_WebApp_Cust_Read,     Cap_Tbl_Customers_Read,  Id_DbUser_WebApp,
+                    "svc-webapp requires SELECT on Customers for the customer list endpoint.",
                     new DateTime(2024, 1, 15, 0, 0, 0, DateTimeKind.Utc)),
-                MakeGrant(Grant_DbUser_WebApp_Addr_Read,  Cap_Tbl_Addresses_Read,  Id_DbUser_WebApp,
-                    "svc-webapp requires SELECT on Addresses for customer detail responses.",
+                MakeGrant(Grant_DbUser_WebApp_Addr_Read,     Cap_Tbl_Addresses_Read,  Id_DbUser_WebApp,
+                    "svc-webapp requires SELECT on Addresses for customer detail.",
                     new DateTime(2024, 1, 15, 0, 0, 0, DateTimeKind.Utc)),
-                MakeGrant(Grant_DbUser_WebApp_Pay_Read,   Cap_Tbl_Payments_Read,   Id_DbUser_WebApp,
-                    "svc-webapp requires SELECT on Payments for GET /api/customers/{id} payment summary.",
+                MakeGrant(Grant_DbUser_WebApp_Pay_Read,      Cap_Tbl_Payments_Read,   Id_DbUser_WebApp,
+                    "svc-webapp requires SELECT on Payments for payment summary.",
                     new DateTime(2024, 1, 15, 0, 0, 0, DateTimeKind.Utc)),
-
-                // CustomerData: db-readers-role → Customers(SELECT)
-                // NOTE: This role is mapped to AD\DB-Readers — all group members get this grant transitively.
-                MakeGrant(Grant_DbRole_CustReader_Cust_Read, Cap_Tbl_Customers_Read, Id_DbRole_CustDataReader,
-                    "db-readers-role grants SELECT on Customers to all role members (incl. AD\\DB-Readers group).",
+                MakeGrant(Grant_DbRole_CustReader_Cust_Read, Cap_Tbl_Customers_Read,  Id_DbRole_CustDataReader,
+                    "db-readers-role grants SELECT on Customers to role members (incl. AD\\DB-Readers).",
                     new DateTime(2023, 6, 1, 0, 0, 0, DateTimeKind.Utc)),
-
-                // CustomerData: Reporting db user → Customers(SELECT)  (explicit user-level grant)
-                MakeGrant(Grant_DbUser_Reporting_Cust_Read, Cap_Tbl_Customers_Read, Id_DbUser_Reporting,
-                    "Reporting db user has direct SELECT on Customers in addition to role membership.",
+                MakeGrant(Grant_DbUser_Reporting_Cust_Read,  Cap_Tbl_Customers_Read,  Id_DbUser_Reporting,
+                    "Reporting user has explicit SELECT on Customers in addition to role.",
                     new DateTime(2023, 6, 1, 0, 0, 0, DateTimeKind.Utc)),
-
-                // CountryRef: svc-countryref-ro → Countries(SELECT)
-                MakeGrant(Grant_DbUser_CountryRef_Countries, Cap_Tbl_Countries_Read, Id_DbUser_CountryRef,
-                    "Read-only lookup access to ISO country reference data.",
+                MakeGrant(Grant_DbUser_CountryRef_Countries, Cap_Tbl_Countries_Read,  Id_DbUser_CountryRef,
+                    "Read-only access to ISO country lookup data.",
                     new DateTime(2024, 1, 15, 0, 0, 0, DateTimeKind.Utc)),
-
-                // OrdersDB: svc-orders → Orders(SELECT/INSERT), OrderItems(SELECT/INSERT)
-                MakeGrant(Grant_DbUser_Orders_Orders_Read,  Cap_Tbl_Orders_Read,      Id_DbUser_Orders,
-                    "svc-orders requires SELECT on Orders for idempotency checks.",
+                MakeGrant(Grant_DbUser_Orders_Orders_Read,   Cap_Tbl_Orders_Read,      Id_DbUser_Orders,
+                    "svc-orders SELECT on Orders for idempotency checks.",
                     new DateTime(2024, 3, 1, 0, 0, 0, DateTimeKind.Utc)),
-                MakeGrant(Grant_DbUser_Orders_Orders_Write, Cap_Tbl_Orders_Write,     Id_DbUser_Orders,
-                    "svc-orders requires INSERT/UPDATE on Orders for order creation.",
+                MakeGrant(Grant_DbUser_Orders_Orders_Write,  Cap_Tbl_Orders_Write,     Id_DbUser_Orders,
+                    "svc-orders INSERT/UPDATE on Orders.",
                     new DateTime(2024, 3, 1, 0, 0, 0, DateTimeKind.Utc)),
-                MakeGrant(Grant_DbUser_Orders_Items_Read,   Cap_Tbl_OrderItems_Read,  Id_DbUser_Orders,
-                    "svc-orders requires SELECT on OrderItems.",
+                MakeGrant(Grant_DbUser_Orders_Items_Read,    Cap_Tbl_OrderItems_Read,  Id_DbUser_Orders,
+                    "svc-orders SELECT on OrderItems.",
                     new DateTime(2024, 3, 1, 0, 0, 0, DateTimeKind.Utc)),
-                MakeGrant(Grant_DbUser_Orders_Items_Write,  Cap_Tbl_OrderItems_Write, Id_DbUser_Orders,
-                    "svc-orders requires INSERT on OrderItems.",
+                MakeGrant(Grant_DbUser_Orders_Items_Write,   Cap_Tbl_OrderItems_Write, Id_DbUser_Orders,
+                    "svc-orders INSERT on OrderItems.",
                     new DateTime(2024, 3, 1, 0, 0, 0, DateTimeKind.Utc)),
-
-                // HRData: svc-hrapp → Employees(SELECT/INSERT), Salaries(SELECT)
-                MakeGrant(Grant_DbUser_HrApp_Emp_Read,  Cap_Tbl_Employees_Read,  Id_DbUser_HrApp,
-                    "svc-hrapp requires SELECT on Employees.",
+                MakeGrant(Grant_DbUser_HrApp_Emp_Read,       Cap_Tbl_Employees_Read,  Id_DbUser_HrApp,
+                    "svc-hrapp SELECT on Employees.",
                     new DateTime(2024, 2, 1, 0, 0, 0, DateTimeKind.Utc)),
-                MakeGrant(Grant_DbUser_HrApp_Emp_Write, Cap_Tbl_Employees_Write, Id_DbUser_HrApp,
-                    "svc-hrapp requires INSERT/UPDATE on Employees for HR record management.",
+                MakeGrant(Grant_DbUser_HrApp_Emp_Write,      Cap_Tbl_Employees_Write, Id_DbUser_HrApp,
+                    "svc-hrapp INSERT/UPDATE on Employees.",
                     new DateTime(2024, 2, 1, 0, 0, 0, DateTimeKind.Utc)),
-                MakeGrant(Grant_DbUser_HrApp_Sal_Read,  Cap_Tbl_Salaries_Read,   Id_DbUser_HrApp,
-                    "svc-hrapp requires SELECT on Salaries for salary report endpoint.",
+                MakeGrant(Grant_DbUser_HrApp_Sal_Read,       Cap_Tbl_Salaries_Read,   Id_DbUser_HrApp,
+                    "svc-hrapp SELECT on Salaries for the salary report endpoint.",
                     new DateTime(2024, 2, 1, 0, 0, 0, DateTimeKind.Utc)),
-
-                // AuditLog: audit-user → AccessLog(SELECT), Employees(SELECT)
-                MakeGrant(Grant_DbUser_Audit_Emp_Read,  Cap_Tbl_Employees_Read,  Id_DbUser_AuditUser,
-                    "Auditors need employee reference data to correlate audit log entries.",
+                MakeGrant(Grant_DbUser_Audit_Emp_Read,       Cap_Tbl_Employees_Read,  Id_DbUser_AuditUser,
+                    "Auditors need employee reference data to correlate log entries.",
                     new DateTime(2024, 2, 1, 0, 0, 0, DateTimeKind.Utc)),
-                MakeGrant(Grant_DbUser_Audit_Log_Read,  Cap_Tbl_AccessLog_Read,  Id_DbUser_AuditUser,
+                MakeGrant(Grant_DbUser_Audit_Log_Read,       Cap_Tbl_AccessLog_Read,  Id_DbUser_AuditUser,
                     "Auditors have SELECT on the audit access log.",
                     new DateTime(2024, 2, 1, 0, 0, 0, DateTimeKind.Utc)),
-
-                // BYPASS PATH: AD\DB-Readers group directly on Customers(SELECT) via role grant
-                // This is the direct DB bypass — members can query without going through the portal.
-                MakeGrant(Grant_Grp_DbReaders_Cust_Read, Cap_Tbl_Customers_Read, Id_Grp_DbReaders,
-                    "LEGACY BYPASS: AD\\DB-Readers inherited SELECT on Customers via Windows Auth group login. " +
-                    "Members (bob, grace, judy) can query CustomerData directly — not just via endpoint.",
+ 
+                // BYPASS PATH — AD\DB-Readers directly on Customers(SELECT)
+                MakeGrant(Grant_Grp_DbReaders_Cust_Read,     Cap_Tbl_Customers_Read,   Id_Grp_DbReaders,
+                    "LEGACY BYPASS: AD\\DB-Readers inherited SELECT on Customers via group login. " +
+                    "bob, grace, judy can query CustomerData directly.",
                     new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc)),
 
-                // DB admin grants
-                MakeGrant(Grant_Carol_Administer_CustData, Cap_Db_CustomerData_Administer, Id_Login_CarolDba,
-                    "carol-adm DBA login has full administrative access to CustomerData.",
+                MakeGrant(Grant_Carol_Administer_CustData,   Cap_Db_CustomerData_Administer, Id_Login_CarolDba,
+                    "carol-adm DBA login administers CustomerData.",
                     new DateTime(2022, 6, 1, 0, 0, 0, DateTimeKind.Utc)),
-                MakeGrant(Grant_Carol_Administer_HRData,   Cap_Db_HRData_Administer,       Id_Login_CarolDba,
-                    "carol-adm DBA login has full administrative access to HRData.",
+                MakeGrant(Grant_Carol_Administer_HRData,     Cap_Db_HRData_Administer,       Id_Login_CarolDba,
+                    "carol-adm DBA login administers HRData.",
                     new DateTime(2022, 6, 1, 0, 0, 0, DateTimeKind.Utc)),
-
-                // Server role grant
-                MakeGrant(Grant_Login_SA_Sysadmin, Cap_SrvRole_Sysadmin_Administer, Id_Login_SA,
-                    "SA native login has sysadmin role. Should be disabled in prod.",
+                MakeGrant(Grant_Login_SA_Sysadmin,           Cap_SrvRole_Sysadmin_Administer, Id_Login_SA,
+                    "SA login has sysadmin. Should be disabled in prod.",
                     new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc))
             });
 
-            // ─────────────────────────────────────────────────────────────────────
+            // ─────────────────────────────────────────────────────────────────
             // SECTION 10 — CONTENT BINDINGS
-            // ─────────────────────────────────────────────────────────────────────
-            //
-            // Each binding declares one source-to-consumer relationship, stating
-            // WHAT data flows from WHERE and USING WHICH accessor identity.
-            //
-            // For AccessSurface endpoints, bindings make the composite content graph
-            // explicit — the sensitivity resolver uses them to bubble sensitivity
-            // from tables up to endpoints, and from rows up to tables.
+            // ─────────────────────────────────────────────────────────────────
 
             ctx.ContentBindings.AddRange(new[]
             {
-                // ── GET /api/customers  (3 sources: Customers PrimarySource, Addresses Secondary, Countries Lookup)
+                // GET /api/customers — 3 sources
                 new ContentBinding
                 {
                     Id = Binding_GetCustomers_Customers,
                     ConsumerResourceId = Id_Ep_GetCustomers,
                     ContentSourceId    = Id_Tbl_Customers,
                     AccessorResourceId = Id_DbUser_WebApp,
-                    AccessType         = ContentBindingAccessType.Read,
-                    Role               = ContentBindingRole.PrimarySource,
-                    IsActive           = true,
-                    Description        = "GET /api/customers reads paginated rows from dbo.Customers via svc-webapp db user.",
-                    ContributionDescription = "id, name, email, phone — core customer fields. PII. Sensitivity: Restricted."
+                    AccessType  = ContentBindingAccessType.Read,
+                    Role        = ContentBindingRole.PrimarySource,
+                    IsActive    = true,
+                    Description = "Paginated customer rows from dbo.Customers via svc-webapp.",
+                    ContributionDescription = "id, name, email, phone — PII. Sensitivity: Restricted."
                 },
                 new ContentBinding
                 {
@@ -1122,11 +1022,11 @@ namespace IdentityMap.DataModel
                     ConsumerResourceId = Id_Ep_GetCustomers,
                     ContentSourceId    = Id_Tbl_Addresses,
                     AccessorResourceId = Id_DbUser_WebApp,
-                    AccessType         = ContentBindingAccessType.Read,
-                    Role               = ContentBindingRole.SecondarySource,
-                    IsActive           = true,
-                    Description        = "Address details joined into the customer DTO.",
-                    ContributionDescription = "line1, city, postcode, country_code — shipping address fields."
+                    AccessType  = ContentBindingAccessType.Read,
+                    Role        = ContentBindingRole.SecondarySource,
+                    IsActive    = true,
+                    Description = "Address details joined into the customer DTO.",
+                    ContributionDescription = "line1, city, postcode, country_code."
                 },
                 new ContentBinding
                 {
@@ -1134,24 +1034,24 @@ namespace IdentityMap.DataModel
                     ConsumerResourceId = Id_Ep_GetCustomers,
                     ContentSourceId    = Id_Tbl_Countries,
                     AccessorResourceId = Id_DbUser_CountryRef,
-                    AccessType         = ContentBindingAccessType.Read,
-                    Role               = ContentBindingRole.LookupSource,
-                    IsActive           = true,
-                    Description        = "Country name resolved from CountryRef DB via svc-countryref-ro db user.",
-                    ContributionDescription = "countryName — display label for country_code. Non-sensitive public data."
+                    AccessType  = ContentBindingAccessType.Read,
+                    Role        = ContentBindingRole.LookupSource,
+                    IsActive    = true,
+                    Description = "Country name from CountryRef via svc-countryref-ro.",
+                    ContributionDescription = "countryName — display label. Non-sensitive."
                 },
-
-                // ── GET /api/customers/{id}  (Customers + Payments — note: Payments is TopSecret)
+ 
+                // GET /api/customers/{id} — Customers + Payments (TopSecret path)
                 new ContentBinding
                 {
                     Id = Binding_GetCustomerById_Customers,
                     ConsumerResourceId = Id_Ep_GetCustomerById,
                     ContentSourceId    = Id_Tbl_Customers,
                     AccessorResourceId = Id_DbUser_WebApp,
-                    AccessType         = ContentBindingAccessType.Read,
-                    Role               = ContentBindingRole.PrimarySource,
-                    IsActive           = true,
-                    Description        = "Primary customer record for the single-customer detail view.",
+                    AccessType  = ContentBindingAccessType.Read,
+                    Role        = ContentBindingRole.PrimarySource,
+                    IsActive    = true,
+                    Description = "Primary customer record.",
                     ContributionDescription = "Full customer fields."
                 },
                 new ContentBinding
@@ -1160,25 +1060,25 @@ namespace IdentityMap.DataModel
                     ConsumerResourceId = Id_Ep_GetCustomerById,
                     ContentSourceId    = Id_Tbl_Payments,
                     AccessorResourceId = Id_DbUser_WebApp,
-                    AccessType         = ContentBindingAccessType.Read,
-                    Role               = ContentBindingRole.SecondarySource,
-                    IsActive           = true,
-                    Description        = "Payment summary joined into the customer detail DTO. Elevates endpoint sensitivity to TopSecret.",
-                    ContributionDescription = "card_last4, billing_zip — PCI-DSS fields. TopSecret."
+                    AccessType  = ContentBindingAccessType.Read,
+                    Role        = ContentBindingRole.SecondarySource,
+                    IsActive    = true,
+                    Description = "Payment summary. Elevates endpoint effective sensitivity to TopSecret.",
+                    ContributionDescription = "card_last4, billing_zip — PCI-DSS."
                 },
-
-                // ── POST /api/orders  (Orders + OrderItems as WriteTargets)
+ 
+                // POST /api/orders — WriteTargets
                 new ContentBinding
                 {
                     Id = Binding_PostOrder_Orders,
                     ConsumerResourceId = Id_Ep_PostOrder,
                     ContentSourceId    = Id_Tbl_Orders,
                     AccessorResourceId = Id_DbUser_Orders,
-                    AccessType         = ContentBindingAccessType.Write,
-                    Role               = ContentBindingRole.WriteTarget,
-                    IsActive           = true,
-                    Description        = "POST /api/orders inserts an order header into dbo.Orders.",
-                    ContributionDescription = "order_id, customer_id, status, total_amount — written on POST."
+                    AccessType  = ContentBindingAccessType.Write,
+                    Role        = ContentBindingRole.WriteTarget,
+                    IsActive    = true,
+                    Description = "POST /api/orders inserts the order header into dbo.Orders.",
+                    ContributionDescription = "order_id, customer_id, status, total_amount."
                 },
                 new ContentBinding
                 {
@@ -1186,61 +1086,54 @@ namespace IdentityMap.DataModel
                     ConsumerResourceId = Id_Ep_PostOrder,
                     ContentSourceId    = Id_Tbl_OrderItems,
                     AccessorResourceId = Id_DbUser_Orders,
-                    AccessType         = ContentBindingAccessType.Write,
-                    Role               = ContentBindingRole.WriteTarget,
-                    IsActive           = true,
-                    Description        = "POST /api/orders inserts line items into dbo.OrderItems.",
-                    ContributionDescription = "line items — product_id, qty, unit_price written on POST."
+                    AccessType  = ContentBindingAccessType.Write,
+                    Role        = ContentBindingRole.WriteTarget,
+                    IsActive    = true,
+                    Description = "POST /api/orders inserts line items into dbo.OrderItems.",
+                    ContributionDescription = "product_id, qty, unit_price."
                 },
-
-                // ── GET /api/hr/employees
+ 
+                // GET /api/hr/employees
                 new ContentBinding
                 {
                     Id = Binding_GetEmployees_Employees,
                     ConsumerResourceId = Id_Ep_GetEmployees,
                     ContentSourceId    = Id_Tbl_Employees,
                     AccessorResourceId = Id_DbUser_HrApp,
-                    AccessType         = ContentBindingAccessType.Read,
-                    Role               = ContentBindingRole.PrimarySource,
-                    IsActive           = true,
-                    Description        = "Employee directory read from hr.Employees via svc-hrapp db user.",
-                    ContributionDescription = "name, title, department, manager_id — no salary fields."
+                    AccessType  = ContentBindingAccessType.Read,
+                    Role        = ContentBindingRole.PrimarySource,
+                    IsActive    = true,
+                    Description = "Employee directory from hr.Employees via svc-hrapp.",
+                    ContributionDescription = "name, title, department, manager_id."
                 },
-
-                // ── GET /api/hr/salaries
+ 
+                // GET /api/hr/salaries
                 new ContentBinding
                 {
                     Id = Binding_GetSalaries_Salaries,
                     ConsumerResourceId = Id_Ep_GetSalaries,
                     ContentSourceId    = Id_Tbl_Salaries,
                     AccessorResourceId = Id_DbUser_HrApp,
-                    AccessType         = ContentBindingAccessType.Read,
-                    Role               = ContentBindingRole.PrimarySource,
-                    IsActive           = true,
-                    Description        = "Salary report reads hr.Salaries via svc-hrapp. TopSecret path.",
-                    ContributionDescription = "base_salary, bonus, ltip_units — full compensation data."
+                    AccessType  = ContentBindingAccessType.Read,
+                    Role        = ContentBindingRole.PrimarySource,
+                    IsActive    = true,
+                    Description = "Salary report from hr.Salaries via svc-hrapp. TopSecret.",
+                    ContributionDescription = "base_salary, bonus, ltip_units."
                 },
-
-                // ── Row → Table sensitivity bindings
-                // The SSN row's data is served THROUGH the Customers table.
-                // When the traversal reaches the SSN row, it bubbles up to Customers
-                // via the parent_table attribute (Rule 2b), THEN from Customers to endpoints
-                // via the ContentBindings above. This is the row → endpoint sensitivity chain.
-                //
-                // Additionally, we model the Table as a "consumer" of its own rows so that
-                // Rule 6 (ContentBinding reverse) also works when starting traversal from the endpoint.
+ 
+                // Row → Table containment bindings
                 new ContentBinding
                 {
                     Id = Binding_Tbl_Customers_Row_SSN,
                     ConsumerResourceId = Id_Tbl_Customers,
                     ContentSourceId    = Id_Row_CustomerSSN,
                     AccessorResourceId = null,
-                    AccessType         = ContentBindingAccessType.Read,
-                    Role               = ContentBindingRole.PrimarySource,
-                    IsActive           = true,
-                    Description        = "The Customers table aggregates (serves) this TopSecret SSN row. " +
-                                         "Any grant or binding on the table transitively touches this row.",
-                    ContributionDescription = "SSN row — TopSecret sensitivity flag propagates to the parent table."
+                    AccessType  = ContentBindingAccessType.Read,
+                    Role        = ContentBindingRole.PrimarySource,
+                    IsActive    = true,
+                    Description = "Customers table aggregates this TopSecret SSN row. " +
+                                  "Sensitivity propagates upward to the table and all endpoints that read it.",
+                    ContributionDescription = "SSN row — TopSecret flag propagates to parent table."
                 },
                 new ContentBinding
                 {
@@ -1248,10 +1141,10 @@ namespace IdentityMap.DataModel
                     ConsumerResourceId = Id_Tbl_Salaries,
                     ContentSourceId    = Id_Row_SalaryRecord,
                     AccessorResourceId = null,
-                    AccessType         = ContentBindingAccessType.Read,
-                    Role               = ContentBindingRole.PrimarySource,
-                    IsActive           = true,
-                    Description        = "The Salaries table aggregates this executive compensation row.",
+                    AccessType  = ContentBindingAccessType.Read,
+                    Role        = ContentBindingRole.PrimarySource,
+                    IsActive    = true,
+                    Description = "Salaries table aggregates this executive compensation row.",
                     ContributionDescription = "Executive LTIP row — TopSecret."
                 }
             });
@@ -1314,81 +1207,155 @@ namespace IdentityMap.DataModel
             PrintRequestFlowSimulation(Id_Ivan, Id_Ep_PostOrder, ctx, "ivan (DevOps) trying POST /api/orders");
             PrintRequestFlowSimulation(Id_Judy, Id_Ep_GetEmployees, ctx, "judy (auditor) trying GET /api/hr/employees");
 
+            // ═════════════════════════════════════════════════════════════════
+            // JSON EXPORT FOR CYTOSCAPE.JS
+            // ═════════════════════════════════════════════════════════════════
+
+            var outputPath = Path.Combine(
+                AppContext.BaseDirectory, "iam-graph.json");
+
+            AnsiConsole.MarkupLine("\n[bold cyan]═══════════════════════════════════════════════════════════[/]");
+            AnsiConsole.MarkupLine("[bold cyan]  GRAPH EXPORT — Cytoscape.js JSON[/]");
+            AnsiConsole.MarkupLine("[bold cyan]═══════════════════════════════════════════════════════════[/]");
+
+            GraphExportService.ExportToFile(ctx, outputPath);
+
+            var fileInfo = new FileInfo(outputPath);
+            AnsiConsole.MarkupLine($"\n[green]✓ Exported successfully[/]");
+            AnsiConsole.MarkupLine($"  Path  : {outputPath}");
+            AnsiConsole.MarkupLine($"  Size  : {fileInfo.Length:N0} bytes");
+            AnsiConsole.MarkupLine($"  Nodes : {ctx.Resources.Count}");
+            AnsiConsole.MarkupLine($"  Edges : {ctx.Relationships.Count + ctx.Memberships.Count + ctx.Grants.Count + ctx.ContentBindings.Count}");
+            AnsiConsole.MarkupLine($"         ├─ Relationships   : {ctx.Relationships.Count}");
+            AnsiConsole.MarkupLine($"         ├─ Memberships     : {ctx.Memberships.Count}");
+            AnsiConsole.MarkupLine($"         ├─ Grants          : {ctx.Grants.Count}");
+            AnsiConsole.MarkupLine($"         └─ ContentBindings : {ctx.ContentBindings.Count}");
+            AnsiConsole.MarkupLine($"\n  Load in Cytoscape.js:");
+            AnsiConsole.MarkupLine($"  [grey]const graph = await fetch('./iam-graph.json').then(r => r.json());[/]");
+            AnsiConsole.MarkupLine($"  [grey]cy.add(graph.elements.nodes);[/]");
+            AnsiConsole.MarkupLine($"  [grey]cy.add(graph.elements.edges);[/]");
         }
 
-        static Resource MakeAccount(Guid id, string name, string desc) => new()
-        {
-            Id = id,
-            Name = name,
-            Type = ResourceType.Account,
-            Description = desc,
-            Status = "Active"
-        };
+        static List<string> T(params string[] tags) => new List<string>(tags);
 
-        static Resource MakeGroup(Guid id, string name, string desc) => new()
+        static Resource MakeAccount(Guid id, string name, string desc,
+             params string[] extraTags)
         {
-            Id = id,
-            Name = name,
-            Type = ResourceType.Group,
-            Description = desc,
-            Status = "Active"
-        };
+            var tags = new List<string> { "tier:identity", "kind:human" };
+            tags.AddRange(extraTags);
+            return new Resource
+            {
+                Id = id,
+                Name = name,
+                Type = ResourceType.Account,
+                Description = desc,
+                Status = "Active",
+                Tags = tags
+            };
+        }
 
-        static Resource MakeDatabase(Guid id, string name, string desc, SensitivityClassification sensitivity) => new()
+        static Resource MakeGroup(Guid id, string name, string desc,
+            params string[] extraTags)
         {
-            Id = id,
-            Name = name,
-            Type = ResourceType.Database,
-            Description = desc,
-            ContentAccessModel = ContentAccessModel.AccessSurface,
-            ContentNature = ContentNature.Dynamic,
-            Sensitivity = sensitivity,
-            Status = "Active"
-        };
+            var tags = new List<string> { "tier:identity", "kind:ad-group" };
+            tags.AddRange(extraTags);
+            return new Resource
+            {
+                Id = id,
+                Name = name,
+                Type = ResourceType.Group,
+                Description = desc,
+                Status = "Active",
+                Tags = tags
+            };
+        }
 
-        static Resource MakeTable(Guid id, string name, string desc, SensitivityClassification sensitivity) => new()
+        static Resource MakeDatabase(Guid id, string name, string desc,
+            SensitivityClassification sensitivity, params string[] extraTags)
         {
-            Id = id,
-            Name = name,
-            Type = ResourceType.DataStore,
-            Description = desc,
-            ContentAccessModel = ContentAccessModel.ResourceIsContent,
-            ContentNature = ContentNature.Dynamic,
-            Sensitivity = sensitivity,
-            Status = "Active"
-        };
+            var tags = new List<string> { "tier:database", "kind:database" };
+            tags.AddRange(extraTags);
+            return new Resource
+            {
+                Id = id,
+                Name = name,
+                Type = ResourceType.Database,
+                Description = desc,
+                ContentAccessModel = ContentAccessModel.AccessSurface,
+                ContentNature = ContentNature.Dynamic,
+                Sensitivity = sensitivity,
+                Status = "Active",
+                Tags = tags
+            };
+        }
 
-        static Resource MakeRole(Guid id, string name, string desc) => new()
+        /// <summary>
+        /// Creates a table resource. Uses ResourceType.Table (not DataStore).
+        /// ContentAccessModel = ResourceIsContent — the rows ARE the content.
+        /// </summary>
+        static Resource MakeTable(Guid id, string name, string desc,
+            SensitivityClassification sensitivity, params string[] extraTags)
         {
-            Id = id,
-            Name = name,
-            Type = ResourceType.Role,
-            Description = desc,
-            Status = "Active"
-        };
+            var tags = new List<string> { "tier:database", "kind:table" };
+            tags.AddRange(extraTags);
+            return new Resource
+            {
+                Id = id,
+                Name = name,
+                Type = ResourceType.Table,
+                Description = desc,
+                ContentAccessModel = ContentAccessModel.ResourceIsContent,
+                ContentNature = ContentNature.Dynamic,
+                Sensitivity = sensitivity,
+                Status = "Active",
+                Tags = tags
+            };
+        }
 
-        static Resource MakeDbUser(Guid id, string name, string desc) => new()
+        static Resource MakeRole(Guid id, string name, string desc,
+            params string[] tags) =>
+            new Resource
+            {
+                Id = id,
+                Name = name,
+                Type = ResourceType.Role,
+                Description = desc,
+                Status = "Active",
+                Tags = new List<string>(tags)
+            };
+
+        static Resource MakeDbUser(Guid id, string name, string desc) =>
+            new Resource
+            {
+                Id = id,
+                Name = name,
+                Type = ResourceType.ServiceAccount,
+                Description = desc,
+                Status = "Active",
+                Tags = T("tier:database", "kind:db-user")
+            };
+
+        static Resource MakeEndpoint(Guid id, string name, string desc,
+            params string[] extraTags)
         {
-            Id = id,
-            Name = name,
-            Type = ResourceType.ServiceAccount,
-            Description = desc,
-            Status = "Active"
-        };
+            var tags = new List<string> { "tier:web", "kind:endpoint" };
+            tags.AddRange(extraTags);
+            return new Resource
+            {
+                Id = id,
+                Name = name,
+                Type = ResourceType.ServiceEndpoint,
+                Description = desc,
+                ContentAccessModel = ContentAccessModel.AccessSurface,
+                ContentNature = ContentNature.Dynamic,
+                Status = "Active",
+                Tags = tags
+            };
+        }
 
-        static Resource MakeEndpoint(Guid id, string name, string desc) => new()
-        {
-            Id = id,
-            Name = name,
-            Type = ResourceType.ServiceEndpoint,
-            Description = desc,
-            ContentAccessModel = ContentAccessModel.AccessSurface,
-            ContentNature = ContentNature.Dynamic,
-            Status = "Active"
-        };
-
-        static ResourceCapability MakeCap(Guid id, Guid resourceId, CapabilityType type,
-            CapabilityScope scope, string desc) => new()
+        static ResourceCapability MakeCap(Guid id, Guid resourceId,
+            CapabilityType type, CapabilityScope scope, string desc) =>
+            new ResourceCapability
             {
                 Id = id,
                 ResourceId = resourceId,
@@ -1400,7 +1367,8 @@ namespace IdentityMap.DataModel
             };
 
         static CapabilityGrant MakeGrant(Guid id, Guid capId, Guid subjectId,
-            string justification, DateTime activatedAt) => new()
+            string justification, DateTime activatedAt) =>
+            new CapabilityGrant
             {
                 Id = id,
                 ResourceCapabilityId = capId,
@@ -1425,7 +1393,7 @@ namespace IdentityMap.DataModel
 
         static ResourceRelationship Rel(Guid parentId, Guid childId,
             RelationshipType type, string? notes = null) =>
-            new()
+            new ResourceRelationship
             {
                 Id = Guid.NewGuid(),
                 ParentResourceId = parentId,
@@ -1436,7 +1404,7 @@ namespace IdentityMap.DataModel
 
         static BusinessAppMembership Membership(Guid groupId, Guid memberId,
             string role = "Member") =>
-            new()
+            new BusinessAppMembership
             {
                 Id = Guid.NewGuid(),
                 BusinessAppResourceId = groupId,
@@ -1444,35 +1412,33 @@ namespace IdentityMap.DataModel
                 Role = role,
                 IsActive = true
             };
-        
+
         // ═════════════════════════════════════════════════════════════════════════
         // PRINT HELPERS
         // ═════════════════════════════════════════════════════════════════════════
 
         static void PrintGraphNeo4jStyle(AccessGraphContext ctx)
         {
-            // Nodes
             AnsiConsole.MarkupLine("\n[bold yellow]NODES[/]");
             var nodeTable = new Table().Border(TableBorder.Rounded);
-            nodeTable.AddColumn("Id"); nodeTable.AddColumn("Type");
-            nodeTable.AddColumn("Name"); nodeTable.AddColumn("Sensitivity");
+            nodeTable.AddColumn("Type"); nodeTable.AddColumn("Name");
+            nodeTable.AddColumn("Sensitivity"); nodeTable.AddColumn("Tags");
             foreach (var r in ctx.Resources)
-                nodeTable.AddRow(r.Id.ToString()[..8] + "…", r.Type.ToString(), r.Name, r.Sensitivity.ToString());
+                nodeTable.AddRow(r.Type.ToString(), r.Name, r.Sensitivity.ToString(),
+                    string.Join(", ", r.Tags.Take(3)));
             AnsiConsole.Write(nodeTable);
 
-            // Relationships
             AnsiConsole.MarkupLine("\n[bold yellow]RELATIONSHIPS[/]");
             var relTable = new Table().Border(TableBorder.Rounded);
-            relTable.AddColumn("Parent"); relTable.AddColumn("Type"); relTable.AddColumn("Child"); relTable.AddColumn("Notes");
+            relTable.AddColumn("Parent"); relTable.AddColumn("Type"); relTable.AddColumn("Child");
             foreach (var rel in ctx.Relationships)
             {
                 var parent = ctx.FindResource(rel.ParentResourceId)?.Name ?? rel.ParentResourceId.ToString()[..8];
                 var child = ctx.FindResource(rel.ChildResourceId)?.Name ?? rel.ChildResourceId.ToString()[..8];
-                relTable.AddRow(parent, rel.Type.ToString(), child, rel.Notes ?? "");
+                relTable.AddRow(parent, rel.Type.ToString(), child);
             }
             AnsiConsole.Write(relTable);
 
-            // Group Memberships
             AnsiConsole.MarkupLine("\n[bold yellow]MEMBERSHIPS[/]");
             var memTable = new Table().Border(TableBorder.Rounded);
             memTable.AddColumn("Group / Role"); memTable.AddColumn("Member"); memTable.AddColumn("Role");
@@ -1495,258 +1461,160 @@ namespace IdentityMap.DataModel
             }
             AnsiConsole.Write(capTable);
 
-            // Grants
             AnsiConsole.MarkupLine("\n[bold yellow]GRANTS[/]");
             var grantTable = new Table().Border(TableBorder.Rounded);
-            grantTable.AddColumn("Subject"); grantTable.AddColumn("Capability"); grantTable.AddColumn("Status"); grantTable.AddColumn("Justification");
+            grantTable.AddColumn("Subject"); grantTable.AddColumn("Capability"); grantTable.AddColumn("Status");
             foreach (var g in ctx.Grants)
             {
                 var subject = ctx.FindResource(g.SubjectResourceId)?.Name ?? g.SubjectResourceId.ToString()[..8];
                 var cap = ctx.Capabilities.FirstOrDefault(c => c.Id == g.ResourceCapabilityId);
-                var capDesc = cap != null ? $"{cap.Type} on {ctx.FindResource(cap.ResourceId)?.Name}" : g.ResourceCapabilityId.ToString()[..8];
-                grantTable.AddRow(subject, capDesc, g.Status.ToString(), g.Justification?.Substring(0, Math.Min(60, g.Justification.Length)) ?? "");
+                var capDesc = cap != null ? $"{cap.Type} on {ctx.FindResource(cap.ResourceId)?.Name}" : "?";
+                grantTable.AddRow(subject, capDesc, g.Status.ToString());
             }
             AnsiConsole.Write(grantTable);
 
-            // Content Bindings
             AnsiConsole.MarkupLine("\n[bold yellow]CONTENT BINDINGS[/]");
-            var bindingTable = new Table().Border(TableBorder.Rounded);
-            bindingTable.AddColumn("Source"); bindingTable.AddColumn("Consumer"); bindingTable.AddColumn("Accessor");
-            bindingTable.AddColumn("AccessType"); bindingTable.AddColumn("Role"); bindingTable.AddColumn("Active");
+            var bindTable = new Table().Border(TableBorder.Rounded);
+            bindTable.AddColumn("Source"); bindTable.AddColumn("Consumer");
+            bindTable.AddColumn("Accessor"); bindTable.AddColumn("Type"); bindTable.AddColumn("Role");
             foreach (var b in ctx.ContentBindings)
             {
-                var source = ctx.FindResource(b.ContentSourceId)?.Name ?? b.ContentSourceId.ToString()[..8];
-                var consumer = ctx.FindResource(b.ConsumerResourceId)?.Name ?? b.ConsumerResourceId.ToString()[..8];
+                var source = ctx.FindResource(b.ContentSourceId)?.Name ?? "?";
+                var consumer = ctx.FindResource(b.ConsumerResourceId)?.Name ?? "?";
                 var accessor = b.AccessorResourceId.HasValue
-                    ? ctx.FindResource(b.AccessorResourceId.Value)?.Name ?? "" : "—";
-                bindingTable.AddRow(source, consumer, accessor, b.AccessType.ToString(), b.Role.ToString(), b.IsActive ? "✓" : "✗");
+                    ? ctx.FindResource(b.AccessorResourceId.Value)?.Name ?? "?" : "—";
+                bindTable.AddRow(source, consumer, accessor, b.AccessType.ToString(), b.Role.ToString());
             }
-            AnsiConsole.Write(bindingTable);
+            AnsiConsole.Write(bindTable);
         }
 
         static void PrintCapabilityTraversal(Guid sensitiveResourceId, AccessGraphContext ctx)
         {
             var touchpoints = AccessGraphResolver.FindTouchpoints(sensitiveResourceId, ctx);
             var source = ctx.FindResource(sensitiveResourceId)!;
-            AnsiConsole.MarkupLine($"\n[grey]Source: [bold]{source.Name}[/] ({source.Type}) — Sensitivity: [red]{source.Sensitivity}[/][/]");
 
-            if (touchpoints.Count == 0)
-            {
-                AnsiConsole.MarkupLine("[red]No touchpoints found.[/]");
-                return;
-            }
+            if (touchpoints.Count == 0) { AnsiConsole.MarkupLine("[red]No touchpoints.[/]"); return; }
 
-            var tree = new Tree($"[bold red]{source.Name}[/] [grey]({source.Type})[/] [yellow]⚡ {source.Sensitivity}[/]");
+            var tree = new Tree($"[bold red]{source.Name}[/] [grey]({source.Type}) ⚡ {source.Sensitivity}[/]");
             var nodesByPath = new Dictionary<string, TreeNode>();
-            var rootTp = touchpoints[0];
-            var rootPathKey = string.Join(" -> ", rootTp.PathFromSource);
-            nodesByPath[rootPathKey] = tree.AddNode($"[bold red]{rootTp.Resource.Name}[/] [grey]({rootTp.Resource.Type})[/]");
+            var rootKey = string.Join(" -> ", touchpoints[0].PathFromSource);
+            nodesByPath[rootKey] = tree.AddNode($"[bold red]{source.Name}[/]");
 
             foreach (var tp in touchpoints.Skip(1))
             {
-                var pathKey = string.Join(" -> ", tp.PathFromSource);
-                var parentPathKey = string.Join(" -> ", tp.PathFromSource.Take(tp.PathFromSource.Count - 1));
-                if (!nodesByPath.TryGetValue(parentPathKey, out var parentNode))
-                    parentNode = nodesByPath[rootPathKey];
+                var key = string.Join(" -> ", tp.PathFromSource);
+                var parentKey = string.Join(" -> ", tp.PathFromSource.Take(tp.PathFromSource.Count - 1));
+                if (!nodesByPath.TryGetValue(parentKey, out var parent))
+                    parent = nodesByPath[rootKey];
 
-                var sensitivityTag = tp.Resource.Sensitivity >= SensitivityClassification.Restricted
-                    ? $"[red]⚠ {tp.Resource.Sensitivity}[/]" : $"[grey]{tp.Resource.Sensitivity}[/]";
                 var typeColor = tp.Resource.Type switch
                 {
                     ResourceType.Account or ResourceType.ServiceAccount => "cyan",
                     ResourceType.Group => "yellow",
                     ResourceType.ServiceEndpoint => "magenta",
-                    ResourceType.DataStore or ResourceType.Database => "blue",
+                    ResourceType.Table or ResourceType.Database => "blue",
                     _ => "white"
                 };
-                var node = parentNode.AddNode(
-                    $"[{typeColor}]{tp.Resource.Name}[/] [grey]({tp.Resource.Type}) ← {tp.EdgeLabel}[/] {sensitivityTag} [grey]depth:{tp.Depth}[/]");
-                nodesByPath[pathKey] = node;
+                var node = parent.AddNode(
+                    $"[{typeColor}]{tp.Resource.Name}[/] [grey]({tp.Resource.Type}) ← {tp.EdgeLabel}[/]");
+                nodesByPath[key] = node;
             }
-
             AnsiConsole.Write(tree);
 
             var humans = AccessGraphResolver.FindHumanAccessors(sensitiveResourceId, ctx);
-            AnsiConsole.MarkupLine($"\n[bold]Unique human/service-account endpoints: {humans.Count}[/]");
+            AnsiConsole.MarkupLine($"\n[bold]Human/service endpoints: {humans.Count}[/]");
             foreach (var h in humans)
-                AnsiConsole.MarkupLine($"  [cyan]•[/] {h.Resource.Type}/{h.Resource.Name}  [grey](via {h.EdgeLabel})[/]");
+                AnsiConsole.MarkupLine($"  [cyan]•[/] {h.Resource.Type}/{h.Resource.Name}");
         }
 
-        // ─────────────────────────────────────────────────────────────────────────
-        // REQUEST FLOW SIMULATION
-        // Walks the IAM graph to answer: "Can this user call this endpoint, and what
-        // access checks happen all the way down to the database tables?"
-        // ─────────────────────────────────────────────────────────────────────────
-        static void PrintRequestFlowSimulation(Guid userId, Guid endpointId, AccessGraphContext ctx, string scenario)
+        static void PrintRequestFlowSimulation(Guid userId, Guid endpointId,
+            AccessGraphContext ctx, string scenario)
         {
             var user = ctx.FindResource(userId)!;
             var endpoint = ctx.FindResource(endpointId)!;
 
-            AnsiConsole.MarkupLine($"\n[bold white]┌─ SCENARIO: {scenario}[/]");
-            AnsiConsole.MarkupLine($"[white]│  User: {user.Name} ({user.Type})[/]");
-            AnsiConsole.MarkupLine($"[white]│  Target: {endpoint.Name} ({endpoint.Type})[/]");
+            AnsiConsole.MarkupLine($"\n[bold white]┌─ {scenario}[/]");
 
-            // CHECK 1: Does the user have (directly or via group membership) an active
-            //          Execute grant on this endpoint?
-            var endpointCaps = ctx.Capabilities
+            var endpointExecCaps = ctx.Capabilities
                 .Where(c => c.ResourceId == endpointId && c.IsEnabled && c.Type == CapabilityType.Execute)
-                .Select(c => c.Id)
-                .ToHashSet();
+                .Select(c => c.Id).ToHashSet();
 
-            bool userCanExecute = false;
-            string? accessPath = null;
+            bool canExec = ctx.Grants.Any(g =>
+                g.Status == GrantStatus.Active
+                && endpointExecCaps.Contains(g.ResourceCapabilityId)
+                && g.SubjectResourceId == userId);
 
-            // Direct grant
-            if (ctx.Grants.Any(g => g.Status == GrantStatus.Active
-                                  && endpointCaps.Contains(g.ResourceCapabilityId)
-                                  && g.SubjectResourceId == userId))
+            if (!canExec)
             {
-                userCanExecute = true;
-                accessPath = $"Direct grant on {user.Name}";
+                var groups = ResolveTransitiveGroups(userId, ctx);
+                canExec = groups.Any(gId => ctx.Grants.Any(g =>
+                    g.Status == GrantStatus.Active
+                    && endpointExecCaps.Contains(g.ResourceCapabilityId)
+                    && g.SubjectResourceId == gId));
             }
 
-            // Transitive: resolve all groups the user is a member of (including nested groups)
-            if (!userCanExecute)
+            if (!canExec)
             {
-                var userGroups = ResolveTransitiveGroupMemberships(userId, ctx);
-                foreach (var grpId in userGroups)
-                {
-                    if (ctx.Grants.Any(g => g.Status == GrantStatus.Active
-                                          && endpointCaps.Contains(g.ResourceCapabilityId)
-                                          && g.SubjectResourceId == grpId))
-                    {
-                        userCanExecute = true;
-                        var grpName = ctx.FindResource(grpId)?.Name ?? grpId.ToString();
-                        accessPath = $"Via group {grpName}";
-                        break;
-                    }
-                }
-            }
-
-            if (!userCanExecute)
-            {
-                AnsiConsole.MarkupLine("│  [bold red]✗ CHECK 1 FAILED — No Execute grant on endpoint. Request DENIED.[/]");
-                AnsiConsole.MarkupLine("[white]└──────────────────────────────────────────────────────────[/]");
+                AnsiConsole.MarkupLine("│  [bold red]✗ DENIED — no Execute grant on endpoint[/]");
+                AnsiConsole.MarkupLine("[white]└──────────────────────────────────────[/]");
                 return;
             }
+            AnsiConsole.MarkupLine("│  [green]✓ Endpoint Execute grant confirmed[/]");
 
-            AnsiConsole.MarkupLine($"│  [green]✓ CHECK 1 PASS — Endpoint access: {accessPath}[/]");
-
-            // CHECK 2: For each ContentBinding on this endpoint, verify the accessor has
-            //          a sufficient grant on the source table.
             var bindings = ctx.ContentBindings
-                .Where(b => b.IsActive && b.ConsumerResourceId == endpointId)
-                .ToList();
+                .Where(b => b.IsActive && b.ConsumerResourceId == endpointId).ToList();
 
-            AnsiConsole.MarkupLine($"│  [white]CHECK 2 — Verifying {bindings.Count} content binding(s):[/]");
-            bool allBindingsOk = true;
-
-            foreach (var binding in bindings)
+            bool allOk = true;
+            foreach (var b in bindings)
             {
-                var source = ctx.FindResource(binding.ContentSourceId)!;
-                var accessorName = binding.AccessorResourceId.HasValue
-                    ? ctx.FindResource(binding.AccessorResourceId.Value)?.Name ?? "unknown"
-                    : "none";
+                var src = ctx.FindResource(b.ContentSourceId)!;
+                var reqCap = b.AccessType == ContentBindingAccessType.Write
+                    ? CapabilityType.Write : CapabilityType.Read;
+                var srcCaps = ctx.Capabilities
+                    .Where(c => c.ResourceId == b.ContentSourceId && c.IsEnabled && c.Type == reqCap)
+                    .Select(c => c.Id).ToHashSet();
 
-                // Find a capability of sufficient level on the source for this access type
-                CapabilityType requiredCap = binding.AccessType switch
+                bool ok = false;
+                if (b.AccessorResourceId.HasValue)
                 {
-                    ContentBindingAccessType.Write => CapabilityType.Write,
-                    ContentBindingAccessType.ReadWrite => CapabilityType.Write,
-                    ContentBindingAccessType.Execute => CapabilityType.Execute,
-                    _ => CapabilityType.Read
-                };
-
-                var sourceCaps = ctx.Capabilities
-                    .Where(c => c.ResourceId == binding.ContentSourceId
-                             && c.IsEnabled
-                             && c.Type == requiredCap)
-                    .Select(c => c.Id)
-                    .ToHashSet();
-
-                bool accessorHasGrant = false;
-                if (binding.AccessorResourceId.HasValue)
-                {
-                    var accessorId = binding.AccessorResourceId.Value;
-                    // Direct grant on accessor
-                    accessorHasGrant = ctx.Grants.Any(g =>
-                        g.Status == GrantStatus.Active
-                        && sourceCaps.Contains(g.ResourceCapabilityId)
-                        && g.SubjectResourceId == accessorId);
-
-                    // Via role membership
-                    if (!accessorHasGrant)
-                    {
-                        var accessorGroups = ResolveTransitiveGroupMemberships(accessorId, ctx);
-                        accessorHasGrant = accessorGroups.Any(gId =>
+                    var aid = b.AccessorResourceId.Value;
+                    ok = ctx.Grants.Any(g => g.Status == GrantStatus.Active
+                                           && srcCaps.Contains(g.ResourceCapabilityId)
+                                           && g.SubjectResourceId == aid);
+                    if (!ok)
+                        ok = ResolveTransitiveGroups(aid, ctx).Any(gId =>
                             ctx.Grants.Any(g => g.Status == GrantStatus.Active
-                                             && sourceCaps.Contains(g.ResourceCapabilityId)
+                                             && srcCaps.Contains(g.ResourceCapabilityId)
                                              && g.SubjectResourceId == gId));
-                    }
                 }
 
-                string icon = accessorHasGrant ? "[green]  ✓[/]" : "[red]  ✗[/]";
-                string role = $"[bold yellow]{binding.Role}[/]";
-                AnsiConsole.MarkupLine(
-                    $"│  {icon} {role,22} {source.Name,-35} via {accessorName,-30} " +
-                    $"({binding.AccessType}) Sensitivity:{source.Sensitivity}");
-
-                if (!accessorHasGrant) allBindingsOk = false;
+                var icon = ok ? "[green]  ✓[/]" : "[red]  ✗[/]";
+                AnsiConsole.MarkupLine($"│  {icon} {b.Role,-22} {src.Name,-35} via " +
+                    $"{(b.AccessorResourceId.HasValue ? ctx.FindResource(b.AccessorResourceId.Value)?.Name : "—"),-28} " +
+                    $"({b.AccessType}) {src.Sensitivity}");
+                if (!ok) allOk = false;
             }
 
-            if (!allBindingsOk)
-                AnsiConsole.MarkupLine("│  [bold red]✗ CHECK 2 PARTIAL FAIL — One or more accessor grants are missing.[/]");
-            else
-                AnsiConsole.MarkupLine("│  [green]✓ CHECK 2 PASS — All accessor grants verified.[/]");
-
-            // CHECK 3: Determine effective sensitivity of the endpoint response
-            var maxSensitivity = bindings
-                .Select(b => ctx.FindResource(b.ContentSourceId)?.Sensitivity ?? SensitivityClassification.None)
-                .DefaultIfEmpty(SensitivityClassification.None)
-                .Max();
-
-            AnsiConsole.MarkupLine($"│  [bold]CHECK 3 — Effective response sensitivity: [red]{maxSensitivity}[/][/]");
-
-            // CHECK 4: Does the user's clearance level match the response sensitivity?
-            // For demo purposes we model executive-only endpoints as requiring Restricted+
-            bool sensitivityOk = maxSensitivity <= SensitivityClassification.Restricted
-                || user.Name.Contains("harry") || user.Name.Contains("adm");
-            if (!sensitivityOk)
-                AnsiConsole.MarkupLine("│  [red]⚠ CHECK 4 WARN — Response sensitivity exceeds standard clearance for this user.[/]");
-            else
-                AnsiConsole.MarkupLine("│  [green]✓ CHECK 4 PASS — User clearance sufficient.[/]");
-
-            AnsiConsole.MarkupLine("│");
-            string finalVerdict = userCanExecute && allBindingsOk ? "[bold green]✓ REQUEST ALLOWED[/]" : "[bold red]✗ REQUEST WOULD FAIL AT RUNTIME[/]";
-            AnsiConsole.MarkupLine($"│  {finalVerdict}");
-            AnsiConsole.MarkupLine("[white]└──────────────────────────────────────────────────────────[/]");
+            var verdict = allOk ? "[bold green]✓ ALLOWED[/]" : "[bold red]✗ RUNTIME FAILURE — accessor grant missing[/]";
+            AnsiConsole.MarkupLine($"│  {verdict}");
+            AnsiConsole.MarkupLine("[white]└──────────────────────────────────────[/]");
         }
 
-        /// <summary>
-        /// Resolves all group IDs that the given principal belongs to, including
-        /// transitive nested group memberships (group-of-groups).
-        /// </summary>
-        static HashSet<Guid> ResolveTransitiveGroupMemberships(Guid principalId, AccessGraphContext ctx)
+        static HashSet<Guid> ResolveTransitiveGroups(Guid principalId, AccessGraphContext ctx)
         {
             var resolved = new HashSet<Guid>();
             var queue = new Queue<Guid>();
             queue.Enqueue(principalId);
-
             while (queue.Count > 0)
             {
                 var current = queue.Dequeue();
-                // Find all groups/BusinessApps that have this principal as a direct member
-                var parentGroups = ctx.Memberships
-                    .Where(m => m.IsActive && m.MemberResourceId == current)
-                    .Select(m => m.BusinessAppResourceId);
-
-                foreach (var grpId in parentGroups)
+                foreach (var m in ctx.Memberships
+                    .Where(m => m.IsActive && m.MemberResourceId == current))
                 {
-                    if (resolved.Add(grpId))
-                        queue.Enqueue(grpId); // recurse into parent group to find its own groups
+                    if (resolved.Add(m.BusinessAppResourceId))
+                        queue.Enqueue(m.BusinessAppResourceId);
                 }
             }
-
             return resolved;
         }
 
