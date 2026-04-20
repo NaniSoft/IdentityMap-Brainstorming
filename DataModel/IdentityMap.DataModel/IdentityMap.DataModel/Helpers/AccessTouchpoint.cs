@@ -23,8 +23,15 @@ namespace IdentityMap.DataModel.Helpers
         /// <summary>The highest sensitivity seen on this path.</summary>
         public SensitivityClassification EffectiveSensitivity { get; init; }
 
+        public TraversalEdge? TraversalEdge { get; init; }
+
+        public IReadOnlyList<string> PolicyConditions { get; init; } = Array.Empty<string>();
+        public EdgeCategory? EdgeCategory => TraversalEdge?.Category;
+        public bool IsReversedEdge => TraversalEdge?.IsReversed ?? false;
+
         public override string ToString() =>
             $"[depth={Depth}] {Resource.Type}/{Resource.Name}  ← {EdgeLabel}\n" +
-            $"   path: {string.Join(" → ", PathFromSource)}";
+            $"   path: {string.Join(" → ", PathFromSource)}" +
+            (PolicyConditions.Any() ? $"\n policies: {string.Join(", ", PolicyConditions)}" : "");
     }
 }

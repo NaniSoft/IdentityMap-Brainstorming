@@ -25,5 +25,8 @@ namespace IdentityMap.DataModel.Entities
 
         public ICollection<CapabilityGrant> Grants { get; set; }
             = new List<CapabilityGrant>();
+
+        public ICollection<PolicyCondition> PolicyConditions { get; set; }
+            = new List<PolicyCondition>();
     }
 }

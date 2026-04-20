@@ -21,5 +21,8 @@ namespace IdentityMap.DataModel.Entities
 
         public ICollection<GrantApprovalVote> ApprovalVotes { get; set; }
             = new List<GrantApprovalVote>();
+
+        public ICollection<PolicyCondition> PolicyConditions { get; set; }
+            = new List<PolicyCondition>();
     }
 }

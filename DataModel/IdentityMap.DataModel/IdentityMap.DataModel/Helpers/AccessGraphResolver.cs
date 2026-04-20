@@ -205,5 +205,30 @@ namespace IdentityMap.DataModel.Helpers
                 .Select(g => g.First())
                 .ToList();
         }
+
+        public static PolicyEvaluationResult EvaluatePolicyAccess(Guid accountId, Guid sensitiveResourceId, AccessGraphContext ctx, IDictionary<string, object>? evaluationContext = null)
+        {
+            return new PolicyEvaluationResult
+            {
+                CanAccess = null, // Placeholder for actual evaluation logic
+                Reason = "Policy evaluation logic not implemented.",
+                Path = Array.Empty<string>(),
+                PolicyConditions = Array.Empty<string>(),
+                SatisfiedConditions = Array.Empty<string>(),
+                UnsatisfiedConditions = Array.Empty<string>()
+            };
+        }
+    }
+
+
+
+    public record PolicyEvaluationResult
+    {
+        public bool? CanAccess { get; init; }
+        public string Reason { get; init; } = string.Empty;
+        public IReadOnlyList<string> Path { get; init; } = Array.Empty<string>();
+        public IReadOnlyList<string> PolicyConditions { get; init; } = Array.Empty<string>();
+        public IReadOnlyList<string> SatisfiedConditions { get; init; } = Array.Empty<string>();
+        public IReadOnlyList<string> UnsatisfiedConditions { get; init; } = Array.Empty<string>();
     }
 }

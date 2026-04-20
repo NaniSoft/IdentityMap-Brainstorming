@@ -14,8 +14,12 @@ namespace IdentityMap.DataModel.Helpers
         public List<ResourceOwnership> Ownerships { get; } = new();
         public List<ContentBinding> ContentBindings { get; } = new();
         public List<ResourcePolicy> Policies { get; } = new();
+        public List<PolicyCondition> PolicyConditions { get; } = new();
 
         public Resource? FindResource(Guid id) =>
             Resources.FirstOrDefault(r => r.Id == id);
+
+        public Resource? FindResourceByName(string name) =>
+            Resources.FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 }
